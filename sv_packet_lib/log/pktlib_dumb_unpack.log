@@ -1,0 +1,155 @@
+
+Warning-[LINX_KRNL] Unsupported Linux kernel
+  Linux kernel '4.9.112-32.el7.x86_64' is not supported.
+  Supported versions are 2.4* or 2.6*.
+
+Command: vcs -full64 -sverilog +warn=all -CFLAGS -g -CC -Ihdr_db/include/gcm-aes/c-file \
+-cpp g++ hdr_db/include/gcm-aes/c-file/aescrypt.c hdr_db/include/gcm-aes/c-file/aeskey.c \
+hdr_db/include/gcm-aes/c-file/aestab.c hdr_db/include/gcm-aes/c-file/gcm.cpp hdr_db/include/gcm-aes/c-file/gfvec.cpp \
+hdr_db/include/gcm-aes/c-file/gcm_dpi.cpp -f pktlib.vf +define+DEBUG_PKTLIB -R test/pktlib_dumb_unpack.sv \
+-l log/pktlib_dumb_unpack.log
+                         Chronologic VCS (TM)
+      Version N-2017.12-SP2-1_Full64 -- Wed Nov 14 20:11:57 2018
+               Copyright (c) 1991-2017 by Synopsys Inc.
+                         ALL RIGHTS RESERVED
+
+This program is proprietary and confidential information of Synopsys Inc.
+and may be used and disclosed only as authorized in a license agreement
+controlling such use and disclosure.
+
+Parsing design file 'test/pktlib_dumb_unpack.sv'
+Parsing included file 'pktlib_class.sv'.
+Parsing included file 'pktlib_include.svh'.
+Parsing included file 'pktlib_object_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'pktlib_display_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'pktlib_array_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'pktlib_crc_chksm_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'pktlib_main_class.sv'.
+Parsing included file 'hdr_db/hdr_class.sv'.
+Parsing included file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_l2_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_macsec_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_ptp_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_mpls_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_ip_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_ipsec_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_udp_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_tcp_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_igmp_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_dphy_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_dsec_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Parsing included file 'hdr_db/include/hdr_xxx_include.svh'.
+Back to file 'hdr_db/include/hdr_common_include.svh'.
+Back to file 'hdr_db/hdr_class.sv'.
+Back to file 'pktlib_main_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/toh_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/pt_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/eth_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/macsec_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/arp_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/dot1q_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/itag_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/etag_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/vntag_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/cntag_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/cnm_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/trill_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/snap_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/ptl2_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/fcoe_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/roce_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/mpls_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/ipv4_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/ipv6_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/ipv6_ext_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/ptip_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/ipsec_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/icmp_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/igmp_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/tcp_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/udp_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/gre_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/ptp_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/ntp_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/lisp_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/otv_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/stt_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/vxlan_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/grh_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/bth_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/fc_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/dphy_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/dsec_hdr_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/data_class.sv'.
+Back to file 'pktlib_include.svh'.
+Parsing included file 'hdr_db/eoh_class.sv'.
+Back to file 'pktlib_include.svh'.
+Back to file 'pktlib_class.sv'.
+Back to file 'test/pktlib_dumb_unpack.sv'.
+Top Level Modules:
+       my_test
+No TimeScale specified
+
+Error-[MFNF] Member not found
+hdr_db/eth_hdr_class.sv, 103
+"\super .all_hdr[0]."
+  Could not find member 'plen' in class 'hdr_class', at "hdr_db/hdr_class.sv",
+  19.
+  
+
+1 error
+CPU time: .278 seconds to compile

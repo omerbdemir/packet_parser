@@ -1,0 +1,181 @@
+# Reading C:/questasim64_10.7c/tcl/vsim/pref.tcl
+# //  Questa Sim-64
+# //  Version 10.7c win64 Aug 18 2018
+# //
+# //  Copyright 1991-2018 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# vsim -gui -sv_seed 1223 -do "wave.do" my_test_mod 
+# Start time: 15:46:28 on Jan 28,2024
+# Loading C:/Users/omer_/AppData/Local/Temp\omer_@DESKTOP-4RR2HNE_dpi_1108\win64_gcc-4.5.0\export_tramp.dll
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-2009) At least one design unit was compiled with optimization level -O0 or -O1.
+# Use vdir -l command to find such design units.
+# ** Warning: test/my_test.sv(48): (vopt-2241) Connection width does not match width of port 'phs_o'. The port definition is at: test\packet_parser_n6.sv(10).
+# ** Warning: test/my_test.sv(48): (vopt-2685) [TFMPC] - Too few port connections for 'dut'.  Expected 7, found 6.
+# ** Warning: test/my_test.sv(48): (vopt-2718) [TFMPC] - Missing connection for port 'phs_valid_o'.
+# ** Warning: test/my_test.sv(107): (vopt-2240) Treating stand-alone use of function 'randomize' as an implicit VOID cast.
+# ** Warning: test/my_test.sv(115): (vopt-2240) Treating stand-alone use of function 'randomize' as an implicit VOID cast.
+# Loading sv_std.std
+# Loading work.parser_typedefs_pkg(fast)
+# Loading work.my_test_sv_unit(fast)
+# Loading work.my_test_mod(fast)
+# ** Warning: (vsim-3015) [PCDPC] - Port size (120) does not match connection size (32) for port 'phs_o'. The port definition is at: test/packet_parser_n6.sv(10).
+#    Time: 0 ps  Iteration: 0  Instance: /my_test_mod/dut File: test/my_test.sv Line: 48
+# Compiling C:/Users/omer_/AppData/Local/Temp\omer_@DESKTOP-4RR2HNE_dpi_1108\win64_gcc-4.5.0\exportwrapper.c
+# Loading C:/Users/omer_/AppData/Local/Temp\omer_@DESKTOP-4RR2HNE_dpi_1108\win64_gcc-4.5.0\vsim_auto_compile.dll
+# ** Warning: (vsim-3770) Failed to find user specified function 'gcm_crypt' in DPI C/C++ source files.
+#    Time: 0 ps  Iteration: 0  Region: /my_test_sv_unit File: hdr_db/../hdr_db/include/gcm-aes/sv-file/gcm_dpi.sv
+# ** Warning: (vsim-3770) Failed to find user specified function 'aes_hkey' in DPI C/C++ source files.
+#    Time: 0 ps  Iteration: 0  Region: /my_test_sv_unit File: hdr_db/../hdr_db/include/gcm-aes/sv-file/gcm_dpi.sv
+# do wave.do
+# 20000 : INFO : TEST : Pack pkt 1
+#     cfg_hdr : {eth[0], ipv4[0], udp[0], data[0]} (IEEE802)
+#              toh :                                                   plen : 60 
+#              toh :                                           chop_plen_to : 0 
+#           eth[0] : [   0 :   47] :   0 :                               da : 48'hcb630c415e89 
+#           eth[0] : [  48 :   95] :   6 :                               sa : 48'he4fbfef4a4c2 
+#           eth[0] : [  96 :  111] :  12 :                            etype : 16'h800 (IPV4)
+#          ipv4[0] : [ 112 :  115] :  14 :                          version : 4'h4 
+#          ipv4[0] : [ 116 :  119] :  14 :                              ihl : 4'h5 
+#          ipv4[0] : [ 120 :  127] :  15 :                              tos : 8'h2 
+#          ipv4[0] : [ 128 :  143] :  16 :                     total_length : 16'h2a 
+#          ipv4[0] : [ 144 :  159] :  18 :                               id : 16'h4f27 
+#          ipv4[0] : [ 160 :  160] :  20 :                         reserved : 1'h0 
+#          ipv4[0] : [ 161 :  161] :  20 :                               df : 1'h0 
+#          ipv4[0] : [ 162 :  162] :  20 :                               mf : 1'h1 
+#          ipv4[0] : [ 163 :  175] :  20 :                      frag_offset : 13'h1d17 
+#          ipv4[0] : [ 176 :  183] :  22 :                              ttl : 8'h1d 
+#          ipv4[0] : [ 184 :  191] :  23 :                         protocol : 8'h11 (UDP)
+#          ipv4[0] : [ 192 :  207] :  24 :                         checksum : 16'h877d (GOOD)
+#          ipv4[0] : [ 208 :  239] :  26 :                            ip_sa : 32'hf03717ae 
+#          ipv4[0] : [ 240 :  271] :  30 :                            ip_da : 32'hcf27b2f8 
+#           udp[0] : [ 272 :  287] :  34 :                          src_prt : 16'he89f 
+#           udp[0] : [ 288 :  303] :  36 :                          dst_prt : 16'hc863 (UNKNOWN)
+#           udp[0] : [ 304 :  319] :  38 :                           length : 16'h16 
+#           udp[0] : [ 320 :  335] :  40 :                         checksum : 16'hd447 (GOOD)
+#          data[0] :                                               data_len : 14 (data => 47 69 94 53 ..)
+#              toh :                                                pad_len : 0 
+#              toh : [ 448 :  479] :  56 :                            crc32 : 32'he63eb701 (GOOD)
+# 
+#          pkt_lib :        0   1  2  3  4  5  6  7 |  8  9 10 11 12 13 14 15
+#          pkt_lib :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          pkt_lib :    0 : cb 63 0c 41 5e 89 e4 fb | fe f4 a4 c2 08 00 45 02 
+#          pkt_lib :   16 : 00 2a 4f 27 3d 17 1d 11 | 87 7d f0 37 17 ae cf 27 
+#          pkt_lib :   32 : b2 f8 e8 9f c8 63 00 16 | d4 47 47 69 94 53 6e fb 
+#          pkt_lib :   48 : f7 d7 38 1a 66 7d 0f 49 | e6 3e b7 01 
+#          pkt_lib :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          pkt_lib : (Total Len  = 60)
+# 
+# plen of packet 0 = 60
+# 180000 : INFO : TEST : Pack pkt 16
+#     cfg_hdr : {eth[0], ipv4[0], udp[0], gtp[0], pdu[0], ipv4[1], tcp[0], data[0]} (IEEE802)
+#              toh :                                                   plen : 168 
+#              toh :                                           chop_plen_to : 0 
+#           eth[0] : [   0 :   47] :   0 :                               da : 48'he0c5872abba6 
+#           eth[0] : [  48 :   95] :   6 :                               sa : 48'hdd187ae19f73 
+#           eth[0] : [  96 :  111] :  12 :                            etype : 16'h800 (IPV4)
+#          ipv4[0] : [ 112 :  115] :  14 :                          version : 4'h4 
+#          ipv4[0] : [ 116 :  119] :  14 :                              ihl : 4'h7 
+#          ipv4[0] : [ 120 :  127] :  15 :                              tos : 8'h52 
+#          ipv4[0] : [ 128 :  143] :  16 :                     total_length : 16'h96 
+#          ipv4[0] : [ 144 :  159] :  18 :                               id : 16'hc951 
+#          ipv4[0] : [ 160 :  160] :  20 :                         reserved : 1'h1 
+#          ipv4[0] : [ 161 :  161] :  20 :                               df : 1'h0 
+#          ipv4[0] : [ 162 :  162] :  20 :                               mf : 1'h1 
+#          ipv4[0] : [ 163 :  175] :  20 :                      frag_offset : 13'h1825 
+#          ipv4[0] : [ 176 :  183] :  22 :                              ttl : 8'h5a 
+#          ipv4[0] : [ 184 :  191] :  23 :                         protocol : 8'h11 (UDP)
+#          ipv4[0] : [ 192 :  207] :  24 :                         checksum : 16'h8441 (GOOD)
+#          ipv4[0] : [ 208 :  239] :  26 :                            ip_sa : 32'ha48344bc 
+#          ipv4[0] : [ 240 :  271] :  30 :                            ip_da : 32'h679e6b12 
+#          ipv4[0] :               :  34 :                          options : (Total Len  = 8)
+#          ipv4[0] :        0   1  2  3  4  5  6  7 |  8  9 10 11 12 13 14 15
+#          ipv4[0] :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          ipv4[0] :    0 : ba dc 29 14 8b 3a 2d 31 | 
+#          ipv4[0] :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#           udp[0] : [ 336 :  351] :  42 :                          src_prt : 16'h8724 
+#           udp[0] : [ 352 :  367] :  44 :                          dst_prt : 16'hebb5 (UNKNOWN)
+#           udp[0] : [ 368 :  383] :  46 :                           length : 16'h7a 
+#           udp[0] : [ 384 :  399] :  48 :                         checksum : 16'h141b (GOOD)
+#           gtp[0] : [ 400 :  407] :  50 :                         msg_type : 8'h54 
+#           gtp[0] : [ 408 :  423] :  51 :                           length : 16'h8d59 
+#           gtp[0] : [ 424 :  455] :  53 :                             TEID : 32'h53571407 
+#           gtp[0] : [ 456 :  471] :  57 :                          seq_num : 16'ha651 
+#           gtp[0] : [ 472 :  479] :  59 :                            n_pdu : 8'he7 
+#           gtp[0] : [ 480 :  487] :  60 :                     nxt_hdr_type : 8'h20 
+#           pdu[0] : [ 488 :  495] :  61 :                           Length : 8'h92 
+#           pdu[0] : [ 496 :  503] :  62 :                            Flags : 8'hfc 
+#           pdu[0] : [ 504 :  504] :  63 :                              PPP : 1'h1 
+#           pdu[0] : [ 505 :  505] :  63 :                              RQI : 1'h0 
+#           pdu[0] : [ 506 :  511] :  63 :                              QFI : 6'h4 
+#           pdu[0] : [ 512 :  527] :  64 :                          Padding : 16'h1cb4 
+#           pdu[0] : [ 528 :  535] :  66 :                    Next hdr type : 8'h81 
+#          ipv4[1] : [ 536 :  539] :  67 :                          version : 4'h4 
+#          ipv4[1] : [ 540 :  543] :  67 :                              ihl : 4'h8 
+#          ipv4[1] : [ 544 :  551] :  68 :                              tos : 8'h4b 
+#          ipv4[1] : [ 552 :  567] :  69 :                     total_length : 16'h60 
+#          ipv4[1] : [ 568 :  583] :  71 :                               id : 16'h45e3 
+#          ipv4[1] : [ 584 :  584] :  73 :                         reserved : 1'h0 
+#          ipv4[1] : [ 585 :  585] :  73 :                               df : 1'h0 
+#          ipv4[1] : [ 586 :  586] :  73 :                               mf : 1'h0 
+#          ipv4[1] : [ 587 :  599] :  73 :                      frag_offset : 13'h1729 
+#          ipv4[1] : [ 600 :  607] :  75 :                              ttl : 8'h77 
+#          ipv4[1] : [ 608 :  615] :  76 :                         protocol : 8'h6 (TCP)
+#          ipv4[1] : [ 616 :  631] :  77 :                         checksum : 16'h42e9 (GOOD)
+#          ipv4[1] : [ 632 :  663] :  79 :                            ip_sa : 32'hbfe1c0e7 
+#          ipv4[1] : [ 664 :  695] :  83 :                            ip_da : 32'h88de0517 
+#          ipv4[1] :               :  87 :                          options : (Total Len  = 12)
+#          ipv4[1] :        0   1  2  3  4  5  6  7 |  8  9 10 11 12 13 14 15
+#          ipv4[1] :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          ipv4[1] :    0 : 58 a1 bb b2 89 1e 77 a7 | 7c 49 00 36 
+#          ipv4[1] :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#           tcp[0] : [ 792 :  807] :  99 :                          src_prt : 16'hedf9 
+#           tcp[0] : [ 808 :  823] : 101 :                          dst_prt : 16'hbe02 (UNKNOWN)
+#           tcp[0] : [ 824 :  855] : 103 :                       seq_number : 32'h422a4837 
+#           tcp[0] : [ 856 :  887] : 107 :                       ack_number : 32'h3568aab5 
+#           tcp[0] : [ 888 :  891] : 111 :                           offset : 4'hc 
+#           tcp[0] : [ 892 :  895] : 111 :                             rsvd : 4'h3 
+#           tcp[0] : [ 896 :  903] : 112 :                            flags : 8'hbd (=> CWR 1 ECE 0 URG 1 ACK 1 PSH 1 RST 1 SYN 0 FIN 1)
+#           tcp[0] : [ 904 :  919] : 113 :                           window : 16'h4304 
+#           tcp[0] : [ 920 :  935] : 115 :                         checksum : 16'h5284 (GOOD)
+#           tcp[0] : [ 936 :  951] : 117 :                       urgent_ptr : 16'h6374 
+#           tcp[0] :               : 119 :                          options : (Total Len  = 28)
+#           tcp[0] :        0   1  2  3  4  5  6  7 |  8  9 10 11 12 13 14 15
+#           tcp[0] :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#           tcp[0] :    0 : 6c 40 39 bb 6f 46 de e3 | d2 7b ca b3 be 94 7f fc 
+#           tcp[0] :   16 : 2a f7 3c 1d b5 d2 a9 23 | 4d b6 57 2b 
+#           tcp[0] :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          data[0] :                                               data_len : 16 (data => 1e 04 19 30 ..)
+#              toh :                                                pad_len : 0 
+#              toh : [1304 : 1335] : 163 :                            crc32 : 32'ha36e2ebc (GOOD)
+# 
+#          pkt_lib :        0   1  2  3  4  5  6  7 |  8  9 10 11 12 13 14 15
+#          pkt_lib :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          pkt_lib :    0 : e0 c5 87 2a bb a6 dd 18 | 7a e1 9f 73 08 00 47 52 
+#          pkt_lib :   16 : 00 96 c9 51 b8 25 5a 11 | 84 41 a4 83 44 bc 67 9e 
+#          pkt_lib :   32 : 6b 12 ba dc 29 14 8b 3a | 2d 31 87 24 eb b5 00 7a 
+#          pkt_lib :   48 : 14 1b 7d 54 8d 59 53 57 | 14 07 a6 51 e7 20 92 fc 
+#          pkt_lib :   64 : 84 1c b4 81 48 4b 00 60 | 45 e3 17 29 77 06 42 e9 
+#          pkt_lib :   80 : bf e1 c0 e7 88 de 05 17 | 58 a1 bb b2 89 1e 77 a7 
+#          pkt_lib :   96 : 7c 49 00 36 ed f9 be 02 | 42 2a 48 37 35 68 aa b5 
+#          pkt_lib :  112 : c3 bd 43 04 52 84 63 74 | 6c 40 39 bb 6f 46 de e3 
+#          pkt_lib :  128 : d2 7b ca b3 be 94 7f fc | 2a f7 3c 1d b5 d2 a9 23 
+#          pkt_lib :  144 : 4d b6 57 2b 1e 04 19 30 | 0a 96 fa f4 f0 3a 85 ae 
+#          pkt_lib :  160 : 14 92 1b b6 a3 6e 2e bc | 
+#          pkt_lib :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          pkt_lib : (Total Len  = 168)
+# 
+# ** Note: $stop    : test/my_test.sv(279)
+#    Time: 620 ns  Iteration: 0  Instance: /my_test_mod
+# Break in Module my_test_mod at test/my_test.sv line 279
+# End time: 16:30:40 on Jan 28,2024, Elapsed time: 0:44:12
+# Errors: 0, Warnings: 9
