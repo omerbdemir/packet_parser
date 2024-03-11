@@ -1,0 +1,114 @@
+m255
+K4
+z2
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/omer_/Desktop/EE/tez/parser_design
+Xpacket_parser_n6_sv_unit
+Z1 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
+Z2 DXx4 work 19 parser_typedefs_pkg 0 22 LRb:fKg3]O;oAhAE0ZgYo3
+VJ;^Ng[K<;YImAoJdMU:Lf3
+r1
+!s85 0
+!i10b 1
+!s100 2R20jb<>chlBZcEzc?cK31
+IJ;^Ng[K<;YImAoJdMU:Lf3
+!i103 1
+S1
+R0
+Z3 w1710187364
+Z4 8packet_parser/packet_parser_n6.sv
+Z5 Fpacket_parser/packet_parser_n6.sv
+Z6 Fpacket_parser\parser_includes.sv
+L0 3
+Z7 OL;L;10.7c;67
+31
+Z8 !s108 1710187369.000000
+!s107 packet_parser\parser_includes.sv|packet_parser/packet_parser_n6.sv|
+Z9 !s90 -work|work|-sv|+acc|-permissive|-timescale|1ns/1ps|+define+NO_PROCESS_AE|packet_parser/packet_parser_n6.sv|
+!s101 -O0
+!i113 0
+Z10 o-O0 -permissive -work work -sv +acc -timescale 1ns/1ps -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z11 !s92 -O0 -permissive -work work -sv +acc -timescale 1ns/1ps +define+NO_PROCESS_AE -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z12 tDisableOpt 1 CoverOpt 1 CvgOpt 0
+vPacketParserN6
+R1
+R2
+DXx4 work 24 packet_parser_n6_sv_unit 0 22 J;^Ng[K<;YImAoJdMU:Lf3
+VDg1SIo80bB@j0V0VzS_@n1
+r1
+!s85 0
+!i10b 1
+!s100 >VYF3B?UfVVR3HdnkYAg:3
+IZ:XCO_;^;5QT`Wge5fQnE0
+!s105 packet_parser_n6_sv_unit
+S1
+R0
+w1710187326
+R4
+R5
+L0 5
+R7
+31
+R8
+Z13 !s107 packet_parser\parser_includes.sv|packet_parser/packet_parser_n6.sv|
+R9
+!s101 -O0
+!i113 0
+R10
+R11
+R12
+n@packet@parser@n6
+Xparser_typedefs_pkg
+R1
+VLRb:fKg3]O;oAhAE0ZgYo3
+r1
+!s85 0
+!i10b 1
+!s100 8E=kBT@Z[mY3n5ghG:k[]1
+ILRb:fKg3]O;oAhAE0ZgYo3
+S1
+R0
+w1710185389
+Z14 8packet_parser/parser_typedefs_pkg.sv
+Z15 Fpacket_parser/parser_typedefs_pkg.sv
+L0 28
+R7
+31
+R8
+Z16 !s107 packet_parser\parser_includes.sv|packet_parser/parser_typedefs_pkg.sv|
+Z17 !s90 -work|work|-sv|+acc|-permissive|-timescale|1ns/1ps|+define+NO_PROCESS_AE|packet_parser/parser_typedefs_pkg.sv|
+!s101 -O0
+!i113 0
+R10
+R11
+R12
+Xparser_typedefs_pkg_sv_unit
+R1
+VXJ6@M3GVbca4P0NJAIV?63
+r1
+!s85 0
+!i10b 1
+!s100 @SjHEH63LQlFLa3z9NhaI3
+IXJ6@M3GVbca4P0NJAIV?63
+!i103 1
+S1
+R0
+R3
+R14
+R15
+R6
+L0 7
+R7
+31
+R8
+R16
+R17
+!s101 -O0
+!i113 0
+R10
+R11
+R12
