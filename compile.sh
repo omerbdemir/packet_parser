@@ -6,10 +6,10 @@ vlib work
 
 vlog -work work -sv $OPTIONS  packet_parser/parser_typedefs_pkg.sv
 vlog -work work -sv $OPTIONS packet_parser/packet_parser_n6.sv
-# vlog -work work -sv $OPTIONS -f pktlib.vf my_test.sv
+vlog -work work -sv $OPTIONS -f pktlib.vf my_test.sv
 
 
-# vsim -gui -sv_seed 1223  my_test_mod 
+vsim -gui -sv_seed 1223 -do "wave.do" my_test_mod &
 
 # vmap work new_lib
 # vlib new_lib

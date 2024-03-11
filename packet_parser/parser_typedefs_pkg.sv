@@ -3,27 +3,7 @@
   // typedef logic [7:0] EthernetAddress;
   // typedef logic [7:0] octet;
   // Ethernet Header
-  `include "parser_includes.sv"
-function int high_index(logic total_len_bytes, logic parse_len_bytes);
-  int remainder;
-  if(total_len_bytes == parse_len_bytes) begin 
-    return parse_len_bytes * `BYTE_WIDTH - 1;
-  end else if (total_len_bytes > parse_len_bytes) begin 
-    remainder = total_len_bytes - parse_len_bytes;
-    return (parse_len_bytes + remainder) * `BYTE_WIDTH - 1;
-  end 
 
-endfunction 
-
-function int low_index(logic total_len_bytes, logic parse_len_bytes);
-  int remainder ;
-  if(total_len_bytes == parse_len_bytes) begin 
-    return 0;
-  end else if(total_len_bytes > parse_len_bytes) begin 
-    remainder = total_len_bytes - parse_len_bytes;
-    return remainder * `BYTE_WIDTH;
-  end 
-endfunction 
 
 package parser_typedefs_pkg;
   typedef enum logic[3:0]{
@@ -70,9 +50,9 @@ package parser_typedefs_pkg;
   }PHS_Struct;
 
   typedef struct packed {
-    logic [47:0]              destMac;
-    logic [47:0]              srcMac;
-    logic [15:0]              etherType;
+    logic [47 : 0]              destMac;
+    logic [47 : 0]              srcMac;
+    logic [15 : 0]              etherType;
     // logic [7:0]               sfd;
     // logic [55:0]              preamble;
   } EthernetHeader;

@@ -3,7 +3,7 @@
 import parser_typedefs_pkg::*;
 
 module PacketParserN6 (
-  input logic [31:0]              bus,
+  input logic [`BUS_WIDTH - 1:0]              bus, 
   input logic                     CLK,
   input logic                     reset,
   input logic                     start_of_packet_i,
@@ -15,6 +15,7 @@ module PacketParserN6 (
   logic [(`BUFFER_WIDTH_BITS - 1):0]     data_buffer ;
   logic [3 : 0]                         ipv4_opts_len;
   logic [16 * 32 - 1 : 0]               ipv4_opts_buf;
+  logic [15 : 0]                        ipv4_tot_len;
   
   logic [16 * 32 - 1 : 0]               tcp_opts_buf;
   logic [3 : 0]                         tcp_opts_len;
@@ -42,11 +43,11 @@ module PacketParserN6 (
       data_buffer <= 0;
     end else begin
       for (int i = 0; i < (`BUFFER_WIDTH * `BYTE_WIDTH)  - `BUS_WIDTH; i = i + 1) begin
-        // data_buffer[i + `BUS_WIDTH] <= data_buffer[i];
-        data_buffer[i] <= data_buffer[i + `BUS_WIDTH];
+        data_buffer[i + `BUS_WIDTH] <= data_buffer[i];
+        // data_buffer[i] <= data_buffer[i + `BUS_WIDTH];
       end
-      // data_buffer[`BUS_WIDTH - 1 : 0] <= bus;
-      data_buffer[`BUFFER_WIDTH_BITS - 1 : `BUFFER_WIDTH_BITS - `BUS_WIDTH] <= bus;
+      data_buffer[`BUS_WIDTH - 1 : 0] <= bus;
+      // data_buffer[`BUFFER_WIDTH_BITS - 1 : `BUFFER_WIDTH_BITS - `BUS_WIDTH] <= bus;
     end
   end
 
@@ -117,6 +118,7 @@ module PacketParserN6 (
         ipv4_opts_buf           <= 0;
         ipv4_opts_len           <= 0;
         payload_buf             <= 0;
+        ipv4_tot_len            <= 0;
       if(start_of_packet_i == 1'b1) begin
         nextState <= N6_ETH;
       end
@@ -144,10 +146,12 @@ module PacketParserN6 (
     N6_IPV4: begin
 
       if(data_ctr * 4 >= `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
-        tpdu_ipv4Header <= data_buffer[(`IPV4_HIGH_INDEX * 8) - 1 -: `IPV4_HDR_SIZE_B * 8 ];
+        // tpdu_ipv4Header <= data_buffer[(`IPV4_HIGH_INDEX * 8) - 1 -: `IPV4_HDR_SIZE_B * 8 ];
+        tpdu_ipv4Header <= data_buffer[`IPV4_LEFT_INDEX : `IPV4_RIGHT_INDEX ];
+        
         // If IPv4 header length is bigger than minimum there are extra options field
-        if (data_buffer[(`IPV4_HIGH_INDEX * 8) - 5 : (`IPV4_HIGH_INDEX * 8) - 8] > 5) begin 
-          ipv4_opts_len <= data_buffer[(`IPV4_HIGH_INDEX * 8) - 5 -: 4];
+        if (data_buffer[`IPV4_LEFT_INDEX - `IPV4_VER_LEN_BITS -: `IPV4_IHL_LEN_BITS] > 5) begin 
+          ipv4_opts_len <= data_buffer[ `IPV4_LEFT_INDEX - `IPV4_VER_LEN_BITS -: `IPV4_IHL_LEN_BITS];
           nextState <= N6_IPV4_OPTS;
         end else begin 
           if (data_buffer[((`IPV4_HIGH_INDEX * 8) - 1 - (8 * 9)) -: 8] == 17) begin 
@@ -176,6 +180,7 @@ module PacketParserN6 (
 
     end
     N6_UDP : begin
+      
       if(data_ctr * 4 >= `UDP_HDR_SIZE_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
         tpdu_udpHeader <= data_buffer[ (`UDP_HIGH_INDEX * 8) - 1 -: `UDP_HDR_SIZE_B * 8];
         nextState <= N6_PAYLOAD;
@@ -183,6 +188,7 @@ module PacketParserN6 (
     end
 
     N6_TCP : begin 
+      ipv4_tot_len <= tpdu_ipv4Header.totalLength;
       if(data_ctr * 4 >= `TCP_HDR_SIZE_MIN_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
         tpdu_tcpHeader <= data_buffer[(22 * 8) - 1 : 16];
         if(data_buffer[(`TCP_HIGH_INDEX * 8 ) - 1 - (8 * 12) -: 4] > 5) begin 

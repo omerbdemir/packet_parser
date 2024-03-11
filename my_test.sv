@@ -31,7 +31,7 @@ module my_test_mod (); // {
   // include files
   `include "pktlib_class.sv"
   // `include "packet_parser_n3.sv"
-  `include "test/packet_parser_n6.sv"
+  `include "packet_parser/packet_parser_n6.sv"
 
   // local defines
   pktlib_class p, p1;
@@ -93,13 +93,13 @@ module my_test_mod (); // {
     p = new();
     p1 = new();
     p.cfg_hdr('{p.eth[0], p.ipv4[0], p.udp[0], p.data[0] });
-    p1.cfg_hdr('{p1.eth[0], p1.ipv4[0], p1.udp[0], p1.data[0]});
+    p1.cfg_hdr('{p1.eth[0], p1.ipv4[0], p1.tcp[0], p1.data[0]});
 
     // p.cfg_hdr('{p.eth[0], p.ipv4[0], p.udp[0], p.gtp[0], p.pdu[0], p.ipv4[1], p.udp[1], p.data[0] });
     // p1.cfg_hdr('{p1.eth[0], p1.ipv4[0], p1.udp[0], p1.gtp[0], p1.pdu[0], p1.ipv4[1], p1.tcp[0], p1.data[0]});
 
     p1.toh.max_plen = 500;
-    p1.toh.min_plen = 4;
+    p1.toh.min_plen = 20;
 
     p.toh.max_plen = 600;
     p.toh.min_plen = 4;
@@ -132,8 +132,8 @@ module my_test_mod (); // {
     // p.display_hdr_pkt(p_pkt); 
     for(i = 0; i < p.toh.plen / 4; i++)
     begin
-      // bus = {p_pkt[i * 4], p_pkt[i * 4 + 1], p_pkt[i * 4 + 2], p_pkt[i * 4 + 3]};
-      bus = {p_pkt[i * 4 + 3], p_pkt[i * 4 + 2], p_pkt[i * 4 + 1], p_pkt[i * 4]};
+      bus = {p_pkt[i * 4], p_pkt[i * 4 + 1], p_pkt[i * 4 + 2], p_pkt[i * 4 + 3]};
+      // bus = {p_pkt[i * 4 + 3], p_pkt[i * 4 + 2], p_pkt[i * 4 + 1], p_pkt[i * 4]};
       if(i == 0) begin
         sop = 1;
       end else begin
@@ -147,16 +147,17 @@ module my_test_mod (); // {
 
       end 
       1: begin 
-        // bus = {p_pkt[p.toh.plen - 1], 24'h000000};
-        bus = {24'h000000, p_pkt[p.toh.plen - 1]};
+        bus = {p_pkt[p.toh.plen - 1], 24'h000000};
+        // bus = {24'h000000, p_pkt[p.toh.plen - 1]};
       end 
       2: begin 
         bus = {p_pkt[p.toh.plen - 2], p_pkt[p.toh.plen - 1], 16'h0000};
-        bus = {p_pkt[p.toh.plen - 2], p_pkt[p.toh.plen - 1], 16'h0000};
+        // bus = {16'h0000, p_pkt[p.toh.plen - 1], p_pkt[p.toh.plen - 2]};
       end
 
       3: begin 
         bus = {p_pkt[p.toh.plen - 3], p_pkt[p.toh.plen - 2], p_pkt[p.toh.plen - 1], 8'h00};
+        // bus = {8'h00, p_pkt[p.toh.plen - 1], p_pkt[p.toh.plen - 2], p_pkt[p.toh.plen - 3]};
       end 
       default: begin 
 
@@ -173,6 +174,7 @@ module my_test_mod (); // {
     for(i = 0; i < p1.toh.plen / 4; i++)
     begin 
       bus = {p1_pkt[i * 4], p1_pkt[i * 4 + 1], p1_pkt[i * 4 + 2], p1_pkt[i * 4 + 3]};
+      // bus = {p1_pkt[i * 4 + 3], p1_pkt[i * 4 + 2], p1_pkt[i * 4 + 1], p1_pkt[i * 4]};
       if(i == 0) begin 
 
         sop = 1;
@@ -189,13 +191,16 @@ module my_test_mod (); // {
       end 
       1: begin 
         bus = {p1_pkt[p1.toh.plen - 1], 24'h000000};
+        // bus = {24'h00000000, p1_pkt[p1.toh.plen - 1]};
       end 
       2: begin 
         bus = {p1_pkt[p1.toh.plen - 2], p1_pkt[p1.toh.plen - 1], 16'h0000};
+        // bus = {16'h0000, p1_pkt[p1.toh.plen - 1], p1_pkt[p1.toh.plen - 2]};
       end
 
       3: begin 
         bus = {p1_pkt[p1.toh.plen - 3], p1_pkt[p1.toh.plen - 2], p1_pkt[p1.toh.plen - 1], 8'h00};
+        // bus = {8'h00, p1_pkt[p1.toh.plen - 1], p1_pkt[p1.toh.plen - 2], p1_pkt[p1.toh.plen - 3]};
       end 
       default: begin 
 
