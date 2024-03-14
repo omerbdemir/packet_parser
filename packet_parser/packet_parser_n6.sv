@@ -3,7 +3,7 @@
 import parser_typedefs_pkg::*;
 
 module PacketParserN6 (
-  input logic [`BUS_WIDTH - 1:0]              bus, 
+  input logic [(`BUS_WIDTH_B * `BYTE_WIDTH) - 1:0]              bus, 
   input logic                     CLK,
   input logic                     reset,
   input logic                     start_of_packet_i,
@@ -42,12 +42,10 @@ module PacketParserN6 (
     if(reset) begin
       data_buffer <= 0;
     end else begin
-      for (int i = 0; i < (`BUFFER_WIDTH * `BYTE_WIDTH)  - `BUS_WIDTH; i = i + 1) begin
-        data_buffer[i + `BUS_WIDTH] <= data_buffer[i];
-        // data_buffer[i] <= data_buffer[i + `BUS_WIDTH];
+      for (int i = 0; i < (`BUFFER_WIDTH_BITS)  - (`BUS_WIDTH_B * `BYTE_WIDTH); i = i + 1) begin
+        data_buffer[i + (`BUS_WIDTH_B * `BYTE_WIDTH)] <= data_buffer[i];
       end
-      data_buffer[`BUS_WIDTH - 1 : 0] <= bus;
-      // data_buffer[`BUFFER_WIDTH_BITS - 1 : `BUFFER_WIDTH_BITS - `BUS_WIDTH] <= bus;
+      data_buffer[(`BUS_WIDTH_B * `BYTE_WIDTH) - 1 : 0] <= bus;
     end
   end
 
@@ -56,12 +54,17 @@ module PacketParserN6 (
     if(reset)begin
       data_ctr <= 0;
     end else begin
-      data_ctr <= data_ctr; 
-      if(currentState != N6_IPV4_OPTS) begin 
-        data_ctr <= data_ctr + 1;
-      end
+      data_ctr <= data_ctr + `BUS_WIDTH_B; 
+      // if(currentState != N6_IPV4_OPTS) begin 
+      //   // data_ctr <= data_ctr + 1;
+      //   data_ctr <= data_ctr + (`BUS_WIDTH_B);
+      // end else begin 
+      //   if(opts_ctr > ipv4_opts_len) begin 
+      //     data_ctr <= data_ctr + (opts_ctr - ipv4_opts_len);
+      //   end 
+      // end 
       if(start_of_packet_i == 1'b1) begin
-        data_ctr <= 1;
+        data_ctr <= (`BUS_WIDTH_B);
       end 
     end
 
@@ -75,12 +78,12 @@ module PacketParserN6 (
       tcp_opts_ctr    <= tcp_opts_ctr;
       opts_ctr        <= opts_ctr;
       if  ( currentState  ==  N6_TCP_OPTS  ) begin 
-        tcp_opts_ctr  <= tcp_opts_ctr + 1;
+        tcp_opts_ctr  <= tcp_opts_ctr + (`BUS_WIDTH_B);
       end
       if  ( currentState == N6_IPV4_OPTS ) begin 
-        opts_ctr <= opts_ctr + 1;
+        opts_ctr <= opts_ctr + (`BUS_WIDTH_B);
       end 
-      if  ( start_of_packet_i ) begin 
+      if  ( start_of_packet_i) begin 
         tcp_opts_ctr  <= 0;
         opts_ctr      <= 0;
       end
@@ -127,7 +130,7 @@ module PacketParserN6 (
     N6_ETH: begin
 
       
-      if(data_ctr * (`BUS_WIDTH / `BYTE_WIDTH) >= `ETH_HDR_SIZE_B) begin 
+      if(data_ctr >= `ETH_HDR_SIZE_B) begin 
         ethernetHeader <= data_buffer[`ETH_LEFT_INDEX : `ETH_RIGHT_INDEX];
         nextState <= N6_IPV4;
       end
@@ -145,7 +148,7 @@ module PacketParserN6 (
 
     N6_IPV4: begin
 
-      if(data_ctr * 4 >= `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
+      if(data_ctr >= `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
         // tpdu_ipv4Header <= data_buffer[(`IPV4_HIGH_INDEX * 8) - 1 -: `IPV4_HDR_SIZE_B * 8 ];
         tpdu_ipv4Header <= data_buffer[`IPV4_LEFT_INDEX : `IPV4_RIGHT_INDEX ];
         
@@ -154,9 +157,9 @@ module PacketParserN6 (
           ipv4_opts_len <= data_buffer[ `IPV4_LEFT_INDEX - `IPV4_VER_LEN_BITS -: `IPV4_IHL_LEN_BITS];
           nextState <= N6_IPV4_OPTS;
         end else begin 
-          if (data_buffer[((`IPV4_HIGH_INDEX * 8) - 1 - (8 * 9)) -: 8] == 17) begin 
+          if (data_buffer[((`IPV4_LEFT_INDEX) - (`LEN_TILL_PROTOCOL_B * `BYTE_WIDTH)) -: 8] == `PROTOCOL_UDP) begin 
             nextState <= N6_UDP;
-          end else begin 
+          end else if (data_buffer[((`IPV4_LEFT_INDEX) - (`LEN_TILL_PROTOCOL_B * `BYTE_WIDTH)) -: 8] == `PROTOCOL_TCP) begin 
             nextState <= N6_TCP;
           end
         end
@@ -165,34 +168,45 @@ module PacketParserN6 (
 
     N6_IPV4_OPTS : begin 
 
-      ipv4_opts_buf[31 : 0] <= data_buffer[47 : 16];
-      for (int i = 0; i < (`IPV4_OPTS_MAX_LEN - 1) * 32; i = i + 1) begin
-        ipv4_opts_buf[i + 32] <= ipv4_opts_buf[i];
+      ipv4_opts_buf[(`BUS_WIDTH_B * `BYTE_WIDTH) - 1 : 0] <= data_buffer[47 : 16];
+      // for (int i = 0; i < ipv4_opts_len; i = i + 1) begin
+
+      for (int i = 0; i < (`IPV4_OPTS_MAX_LEN - 1) * (`BUS_WIDTH_B * `BYTE_WIDTH); i = i + 1) begin
+        ipv4_opts_buf[i + (`BUS_WIDTH_B * `BYTE_WIDTH)] <= ipv4_opts_buf[i];
       end
-      if (opts_ctr < ipv4_opts_len - `IPV4_HDR_MIN_LEN_W - 1) begin 
+      if (opts_ctr < (ipv4_opts_len - `IPV4_HDR_MIN_LEN_W) * 4 - 1) begin 
         nextState <= N6_IPV4_OPTS;
       //Determine the next header type from protocol field in IPv4 header
-      end else if (tpdu_ipv4Header.protocol == 17)begin 
-        nextState <= N6_UDP;
-      end else begin 
-        nextState <= N6_TCP;
-      end
+      end else  begin 
+        // for(int i = 0; i < ipv4_opts_len * (`BUS_WIDTH_B); i = i + 1) begin 
+        //   ipv4_opts_buf[ (i + 1) * `BYTE_WIDTH : i * `BYTE_WIDTH] <= data_buffer[(i + 1) * `BYTE_WIDTH + `IPV4_RIGHT_INDEX : i * `BYTE_WIDTH + `IPV4_RIGHT_INDEX]; 
+        // end 
+        if (tpdu_ipv4Header.protocol == `PROTOCOL_UDP)begin 
+          nextState <= N6_UDP;
+        end else if (tpdu_ipv4Header.protocol == `PROTOCOL_TCP) begin 
+          nextState <= N6_TCP;
+        end else begin 
+          nextState <= N6_IDLE;
+        end
+      end 
 
     end
     N6_UDP : begin
       
-      if(data_ctr * 4 >= `UDP_HDR_SIZE_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
-        tpdu_udpHeader <= data_buffer[ (`UDP_HIGH_INDEX * 8) - 1 -: `UDP_HDR_SIZE_B * 8];
+      if(data_ctr >= `UDP_HDR_SIZE_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
+        tpdu_udpHeader <= data_buffer[ `UDP_LEFT_INDEX -: `UDP_HDR_SIZE_BITS];
         nextState <= N6_PAYLOAD;
       end 
     end
 
-    N6_TCP : begin 
+    N6_TCP : begin  
       ipv4_tot_len <= tpdu_ipv4Header.totalLength;
-      if(data_ctr * 4 >= `TCP_HDR_SIZE_MIN_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
-        tpdu_tcpHeader <= data_buffer[(22 * 8) - 1 : 16];
-        if(data_buffer[(`TCP_HIGH_INDEX * 8 ) - 1 - (8 * 12) -: 4] > 5) begin 
-          tcp_opts_len <= data_buffer[(`TCP_HIGH_INDEX * 8 ) - 1 - (8 * 12) -: 4];
+      if(data_ctr >= `TCP_HDR_SIZE_MIN_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B + ((ipv4_opts_len - `IPV4_HDR_MIN_LEN_W) * 4)) begin 
+        // tpdu_tcpHeader <= data_buffer[`TCP_LEFT_INDEX + ((opts_ctr % ipv4_opts_len) * `BYTE_WIDTH) -: `TCP_HDR_SIZE_BITS];
+        tpdu_tcpHeader <= data_buffer[ (data_ctr - ((ipv4_opts_len - `IPV4_HDR_MIN_LEN_W) * 4)) * 8 - `TILL_IPV4_HDR_BITS - 1 -: `TCP_HDR_SIZE_BITS];
+        $display("data_ctr : %h ipv4_opts_len : %h \n", data_ctr, ipv4_opts_len);
+        if(data_buffer[(`TCP_LEFT_INDEX )- (`LEN_TILL_OFFSET_B * `BYTE_WIDTH) -: `TCP_OFFSET_LEN_BITS] > 5) begin 
+          tcp_opts_len <= data_buffer[(`TCP_LEFT_INDEX ) - (`LEN_TILL_OFFSET_B * `BYTE_WIDTH ) -: `TCP_OFFSET_LEN_BITS];
           nextState <= N6_TCP_OPTS;
         end else begin 
           nextState <= N6_PAYLOAD;

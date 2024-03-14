@@ -20,7 +20,7 @@ module PacketParserN3 (
 
   // State machine states
   
-  logic [(`BUFFER_WIDTH * 8 - 1):0]   data_buffer ;
+  logic [(`BUFFER_WIDTH_BITS - 1):0]   data_buffer ;
   logic [3 : 0]                       ipv4_opts_len;
   logic [16 * 32 - 1 : 0]             ipv4_opts_buf;
   logic [15:0]                        udp_checksum;
@@ -144,7 +144,6 @@ module PacketParserN3 (
     
     N3_ETH: begin
       if(data_ctr * 4 >= `ETH_HDR_SIZE_B) begin
-        // ethernetHeader <= data_buffer[(`ETH_HIGH_INDEX * 8) - 1: `ETH_LOW_INDEX * 8];
         ethernetHeader <= data_buffer[(16 * 8) - 1: 16];
         nextState <= N3_IPV4;
       end
@@ -217,7 +216,7 @@ module PacketParserN3 (
     end 
 
     N3_IPV4_1_OPTS : begin 
-      ipv4_opts_buf[`WORD_LEN_BITS - 1 : 0] <= data_buffer[31 : 0];
+      ipv4_opts_buf[(`BUS_WIDTH_B * `BYTE_WIDTH) - 1 : 0] <= data_buffer[31 : 0];
       for (int i = 0; i < (`IPV4_OPTS_MAX_LEN - 1) * 32; i = i + 1) begin
         ipv4_opts_buf[i + 32] <= ipv4_opts_buf[i];
       end

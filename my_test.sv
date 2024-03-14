@@ -31,17 +31,17 @@ module my_test_mod (); // {
   // include files
   `include "pktlib_class.sv"
   // `include "packet_parser_n3.sv"
+  `include "packet_parser/parser_includes.sv"
   `include "packet_parser/packet_parser_n6.sv"
 
   // local defines
   pktlib_class p, p1;
   bit [7:0]    p_pkt [], u_pkt [], p1_pkt[]; 
-  int          i, err;
-  logic [31:0] bus_tmp;
+  int          i, j, err;
   int remainder;
   bit CLK_test = 0;
   logic reset;
-  logic [31:0] bus;
+  logic [(`BUS_WIDTH_B * `BYTE_WIDTH):0] bus;
   logic [31:0] phs_tb;
   logic sop;
   logic [31:0] plb;
@@ -130,9 +130,13 @@ module my_test_mod (); // {
     // p.unpack_hdr(p_pkt, SMART_UNPACK,, FC);
     // $display("%0t : INFO    : TEST    : Unpack Pkt %0d", $time, i + 1);
     // p.display_hdr_pkt(p_pkt); 
-    for(i = 0; i < p.toh.plen / 4; i++)
+    for(i = 0; i < p.toh.plen / `BUS_WIDTH_B; i++)
     begin
-      bus = {p_pkt[i * 4], p_pkt[i * 4 + 1], p_pkt[i * 4 + 2], p_pkt[i * 4 + 3]};
+      for (int j = 0; j < `BUS_WIDTH_B; j++) begin
+        bus = {bus, p_pkt[i * `BUS_WIDTH_B + j]};
+      end
+
+      // bus = {p_pkt[i * 4], p_pkt[i * 4 + 1], p_pkt[i * 4 + 2], p_pkt[i * 4 + 3]};
       // bus = {p_pkt[i * 4 + 3], p_pkt[i * 4 + 2], p_pkt[i * 4 + 1], p_pkt[i * 4]};
       if(i == 0) begin
         sop = 1;
@@ -141,28 +145,19 @@ module my_test_mod (); // {
       end
       #10;
     end
-    remainder = p.toh.plen % 4;
+    remainder = p.toh.plen % `BUS_WIDTH_B;
     case (remainder)
-      0: begin 
-
-      end 
-      1: begin 
-        bus = {p_pkt[p.toh.plen - 1], 24'h000000};
-        // bus = {24'h000000, p_pkt[p.toh.plen - 1]};
-      end 
-      2: begin 
-        bus = {p_pkt[p.toh.plen - 2], p_pkt[p.toh.plen - 1], 16'h0000};
-        // bus = {16'h0000, p_pkt[p.toh.plen - 1], p_pkt[p.toh.plen - 2]};
-      end
-
-      3: begin 
-        bus = {p_pkt[p.toh.plen - 3], p_pkt[p.toh.plen - 2], p_pkt[p.toh.plen - 1], 8'h00};
-        // bus = {8'h00, p_pkt[p.toh.plen - 1], p_pkt[p.toh.plen - 2], p_pkt[p.toh.plen - 3]};
-      end 
-      default: begin 
-
-      end
+    0: begin
+           // Handle case where remainder is 0
+       end
+    default: begin
+                 bus = '0; // Initialize bus with all zeroes
+                 for (int j = 0; j < remainder; j++) begin
+                     bus = {p_pkt[p.toh.plen - (j+1)], bus};
+                 end
+             end
     endcase
+
     #10;
 
     p1.pack_hdr(p1_pkt);
@@ -171,10 +166,11 @@ module my_test_mod (); // {
 
     p1.display_hdr_pkt(p1_pkt);
     
-    for(i = 0; i < p1.toh.plen / 4; i++)
+    for(i = 0; i < p1.toh.plen / `BUS_WIDTH_B; i++)
     begin 
-      bus = {p1_pkt[i * 4], p1_pkt[i * 4 + 1], p1_pkt[i * 4 + 2], p1_pkt[i * 4 + 3]};
-      // bus = {p1_pkt[i * 4 + 3], p1_pkt[i * 4 + 2], p1_pkt[i * 4 + 1], p1_pkt[i * 4]};
+      for (int j = 0; j < `BUS_WIDTH_B; j++) begin
+        bus = {bus, p1_pkt[i * `BUS_WIDTH_B + j]};
+      end
       if(i == 0) begin 
 
         sop = 1;
@@ -184,27 +180,17 @@ module my_test_mod (); // {
       #10;
     end 
 
-    remainder = p1.toh.plen % 4;
+    remainder = p1.toh.plen % `BUS_WIDTH_B;
     case (remainder)
-      0: begin 
-
-      end 
-      1: begin 
-        bus = {p1_pkt[p1.toh.plen - 1], 24'h000000};
-        // bus = {24'h00000000, p1_pkt[p1.toh.plen - 1]};
-      end 
-      2: begin 
-        bus = {p1_pkt[p1.toh.plen - 2], p1_pkt[p1.toh.plen - 1], 16'h0000};
-        // bus = {16'h0000, p1_pkt[p1.toh.plen - 1], p1_pkt[p1.toh.plen - 2]};
-      end
-
-      3: begin 
-        bus = {p1_pkt[p1.toh.plen - 3], p1_pkt[p1.toh.plen - 2], p1_pkt[p1.toh.plen - 1], 8'h00};
-        // bus = {8'h00, p1_pkt[p1.toh.plen - 1], p1_pkt[p1.toh.plen - 2], p1_pkt[p1.toh.plen - 3]};
-      end 
-      default: begin 
-
-      end
+    0: begin
+           // Handle case where remainder is 0
+       end
+    default: begin
+                 bus = '0; // Initialize bus with all zeroes
+                 for (int j = 0; j < remainder; j++) begin
+                     bus = {p1_pkt[p.toh.plen - (j+1)], bus};
+                 end
+             end
     endcase
     #20;
     // for (i = 0; i < `NUM_PKTS; i++)
