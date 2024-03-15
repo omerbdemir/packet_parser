@@ -1,4 +1,4 @@
-`define BUS_WIDTH_B           (1)
+`define BUS_WIDTH_B           (4)
 `define BUFFER_WIDTH          (1518) //Number of bytes
 `define COUNTER_WIDTH         32  //Number of bits
 

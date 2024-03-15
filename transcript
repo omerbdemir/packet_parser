@@ -1,0 +1,76 @@
+# Reading C:/questasim64_10.7c/tcl/vsim/pref.tcl
+# //  Questa Sim-64
+# //  Version 10.7c win64 Aug 18 2018
+# //
+# //  Copyright 1991-2018 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# vsim -gui -sv_seed 1223 my_test_mod 
+# Start time: 03:46:05 on Mar 15,2024
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: (vopt-2009) At least one design unit was compiled with optimization level -O0 or -O1.
+# Use vdir -l command to find such design units.
+# ** Warning: block_mem/blk_mem_gen_v8_4.v(2465): (vopt-2576) [BSOB] - Bit-select into 'current_contents' is out of bounds.
+# Loading sv_std.std
+# Loading work.my_test_mod(fast)
+# Loading work.MemController(fast)
+# Loading work.design_1_blk_mem_gen_0_0(fast)
+# Loading work.blk_mem_gen_v8_4_7(fast)
+# Loading work.blk_mem_gen_v8_4_7_mem_module(fast)
+# Loading work.blk_mem_gen_v8_4_7_output_stage(fast)
+# Loading work.blk_mem_gen_v8_4_7_output_stage(fast__1)
+# Loading work.blk_mem_gen_v8_4_7_softecc_output_reg_stage(fast)
+# Loading work.blk_mem_axi_regs_fwd_v8_4(fast)
+add wave -position end  sim:/my_test_mod/CLK_test
+add wave -position end  sim:/my_test_mod/reset
+add wave -position end  sim:/my_test_mod/data_in
+add wave -position end  sim:/my_test_mod/byte_valid
+add wave -position end  sim:/my_test_mod/wen
+add wave -position end  sim:/my_test_mod/w_last_pkt
+add wave -position end  sim:/my_test_mod/id_out
+add wave -position end  sim:/my_test_mod/ren
+add wave -position end  sim:/my_test_mod/r_id_in
+add wave -position end  sim:/my_test_mod/data_out
+add wave -position end  sim:/my_test_mod/r_last_pkt
+add wave -position end  sim:/my_test_mod/period_ns
+add wave -position end  sim:/my_test_mod/dut/CLK
+add wave -position end  sim:/my_test_mod/dut/reset
+add wave -position end  sim:/my_test_mod/dut/data_in
+add wave -position end  sim:/my_test_mod/dut/byte_valid
+add wave -position end  sim:/my_test_mod/dut/wen
+add wave -position end  sim:/my_test_mod/dut/w_last_pkt
+add wave -position end  sim:/my_test_mod/dut/id_out
+add wave -position end  sim:/my_test_mod/dut/ren
+add wave -position end  sim:/my_test_mod/dut/r_id_in
+add wave -position end  sim:/my_test_mod/dut/data_out
+add wave -position end  sim:/my_test_mod/dut/r_last_pkt
+add wave -position end  sim:/my_test_mod/dut/mem_data_o
+add wave -position end  sim:/my_test_mod/dut/mem_rsta_busy
+add wave -position end  sim:/my_test_mod/dut/mem_rstb_busy
+add wave -position end  sim:/my_test_mod/dut/mem_ena
+add wave -position end  sim:/my_test_mod/dut/mem_data
+add wave -position end  sim:/my_test_mod/dut/mem_w_addr
+add wave -position end  sim:/my_test_mod/dut/mem_wea
+add wave -position end  sim:/my_test_mod/dut/mem_enb
+add wave -position end  sim:/my_test_mod/dut/mem_r_addr
+add wave -position end  sim:/my_test_mod/dut/r_pkt_id
+add wave -position end  sim:/my_test_mod/dut/mem_read_en
+add wave -position end  sim:/my_test_mod/dut/circ_addr
+add wave -position end  sim:/my_test_mod/dut/mem_w_addr_i
+add wave -position end  sim:/my_test_mod/dut/mem_r_addr_i
+run
+# Block Memory Generator module my_test_mod.dut.blk_mem.inst.native_mem_mapped_module.blk_mem_gen_v8_4_7_inst is using a behavioral model for simulation which will not precisely model memory collision behavior.
+run
+# blk_mem_gen_v8_4_7 collision detected at time: 135000, Instance: my_test_mod.dut.blk_mem.inst.native_mem_mapped_module.blk_mem_gen_v8_4_7_inst.async_coll, A write address: 0, B  read address: 0
+# blk_mem_gen_v8_4_7 collision detected at time: 145000, Instance: my_test_mod.dut.blk_mem.inst.native_mem_mapped_module.blk_mem_gen_v8_4_7_inst.async_coll, A write address: 0, B  read address: 0
+# ** Note: $stop    : block_mem/mem_controller_test.sv(91)
+#    Time: 150 ns  Iteration: 0  Instance: /my_test_mod
+# Break in Module my_test_mod at block_mem/mem_controller_test.sv line 91
