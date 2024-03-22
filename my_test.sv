@@ -30,9 +30,7 @@ module my_test_mod (); // {
 
   // include files
   `include "pktlib_class.sv"
-  // `include "packet_parser_n3.sv"
   `include "packet_parser/parser_includes.sv"
-  `include "packet_parser/packet_parser_n6.sv"
 
   // local defines
   pktlib_class p, p1;

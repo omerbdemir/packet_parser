@@ -4,18 +4,18 @@ trl=$*;
 vlib work
 
 
-vlog -work work $OPTIONS block_mem/blk_mem_gen_v8_4.v
-vlog -work work $OPTIONS block_mem/design_1_blk_mem_gen_0_0.v
-vlog -work work -sv $OPTIONS block_mem/mem_controller.sv
-vlog -work work -sv $OPTIONS block_mem/mem_controller_test.sv  
-vsim -gui -sv_seed 1223 my_test_mod &
+# vlog -work work $OPTIONS block_mem/blk_mem_gen_v8_4.v
+# vlog -work work $OPTIONS block_mem/design_1_blk_mem_gen_0_0.v
+# vlog -work work -sv $OPTIONS block_mem/mem_controller.sv
+# vlog -work work -sv $OPTIONS block_mem/mem_controller_test.sv  
+# vsim -gui -sv_seed 1223 my_test_mod &
 
-# vlog -work work -sv $OPTIONS  packet_parser/parser_typedefs_pkg.sv
-# vlog -work work -sv $OPTIONS packet_parser/packet_parser_n6.sv
-# vlog -work work -sv $OPTIONS -f pktlib.vf my_test.sv
+vlog -work work -sv $OPTIONS  packet_parser/parser_typedefs_pkg.sv
+vlog -work work -sv $OPTIONS packet_parser/packet_parser_n6.sv
+vlog -work work -sv $OPTIONS -f pktlib.vf my_test.sv
 
 
-# vsim -gui -sv_seed 1223 -do "wave.do" my_test_mod &
+vsim -gui -sv_seed 1223 -do "wave.do" my_test_mod &
 
 
 

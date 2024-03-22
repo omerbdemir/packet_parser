@@ -13,64 +13,131 @@
 # //  is prohibited from disclosure under the Trade Secrets Act,
 # //  18 U.S.C. Section 1905.
 # //
-# vsim -gui -sv_seed 1223 my_test_mod 
-# Start time: 03:46:05 on Mar 15,2024
-# ** Note: (vsim-3812) Design is being optimized...
+# vsim -gui -sv_seed 1223 -do "wave.do" my_test_mod 
+# Start time: 03:06:15 on Mar 22,2024
+# Loading C:/Users/omer_/AppData/Local/Temp\omer_@DESKTOP-4RR2HNE_dpi_22000\win64_gcc-4.5.0\export_tramp.dll
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
 # ** Warning: (vopt-2009) At least one design unit was compiled with optimization level -O0 or -O1.
 # Use vdir -l command to find such design units.
-# ** Warning: block_mem/blk_mem_gen_v8_4.v(2465): (vopt-2576) [BSOB] - Bit-select into 'current_contents' is out of bounds.
+# ** Note: (vopt-143) Recognized 1 FSM in module "PacketParserN6(fast)".
 # Loading sv_std.std
+# Loading work.my_test_sv_unit(fast)
 # Loading work.my_test_mod(fast)
-# Loading work.MemController(fast)
-# Loading work.design_1_blk_mem_gen_0_0(fast)
-# Loading work.blk_mem_gen_v8_4_7(fast)
-# Loading work.blk_mem_gen_v8_4_7_mem_module(fast)
-# Loading work.blk_mem_gen_v8_4_7_output_stage(fast)
-# Loading work.blk_mem_gen_v8_4_7_output_stage(fast__1)
-# Loading work.blk_mem_gen_v8_4_7_softecc_output_reg_stage(fast)
-# Loading work.blk_mem_axi_regs_fwd_v8_4(fast)
-add wave -position end  sim:/my_test_mod/CLK_test
-add wave -position end  sim:/my_test_mod/reset
-add wave -position end  sim:/my_test_mod/data_in
-add wave -position end  sim:/my_test_mod/byte_valid
-add wave -position end  sim:/my_test_mod/wen
-add wave -position end  sim:/my_test_mod/w_last_pkt
-add wave -position end  sim:/my_test_mod/id_out
-add wave -position end  sim:/my_test_mod/ren
-add wave -position end  sim:/my_test_mod/r_id_in
-add wave -position end  sim:/my_test_mod/data_out
-add wave -position end  sim:/my_test_mod/r_last_pkt
-add wave -position end  sim:/my_test_mod/period_ns
-add wave -position end  sim:/my_test_mod/dut/CLK
-add wave -position end  sim:/my_test_mod/dut/reset
-add wave -position end  sim:/my_test_mod/dut/data_in
-add wave -position end  sim:/my_test_mod/dut/byte_valid
-add wave -position end  sim:/my_test_mod/dut/wen
-add wave -position end  sim:/my_test_mod/dut/w_last_pkt
-add wave -position end  sim:/my_test_mod/dut/id_out
-add wave -position end  sim:/my_test_mod/dut/ren
-add wave -position end  sim:/my_test_mod/dut/r_id_in
-add wave -position end  sim:/my_test_mod/dut/data_out
-add wave -position end  sim:/my_test_mod/dut/r_last_pkt
-add wave -position end  sim:/my_test_mod/dut/mem_data_o
-add wave -position end  sim:/my_test_mod/dut/mem_rsta_busy
-add wave -position end  sim:/my_test_mod/dut/mem_rstb_busy
-add wave -position end  sim:/my_test_mod/dut/mem_ena
-add wave -position end  sim:/my_test_mod/dut/mem_data
-add wave -position end  sim:/my_test_mod/dut/mem_w_addr
-add wave -position end  sim:/my_test_mod/dut/mem_wea
-add wave -position end  sim:/my_test_mod/dut/mem_enb
-add wave -position end  sim:/my_test_mod/dut/mem_r_addr
-add wave -position end  sim:/my_test_mod/dut/r_pkt_id
-add wave -position end  sim:/my_test_mod/dut/mem_read_en
-add wave -position end  sim:/my_test_mod/dut/circ_addr
-add wave -position end  sim:/my_test_mod/dut/mem_w_addr_i
-add wave -position end  sim:/my_test_mod/dut/mem_r_addr_i
-run
-# Block Memory Generator module my_test_mod.dut.blk_mem.inst.native_mem_mapped_module.blk_mem_gen_v8_4_7_inst is using a behavioral model for simulation which will not precisely model memory collision behavior.
-run
-# blk_mem_gen_v8_4_7 collision detected at time: 135000, Instance: my_test_mod.dut.blk_mem.inst.native_mem_mapped_module.blk_mem_gen_v8_4_7_inst.async_coll, A write address: 0, B  read address: 0
-# blk_mem_gen_v8_4_7 collision detected at time: 145000, Instance: my_test_mod.dut.blk_mem.inst.native_mem_mapped_module.blk_mem_gen_v8_4_7_inst.async_coll, A write address: 0, B  read address: 0
-# ** Note: $stop    : block_mem/mem_controller_test.sv(91)
-#    Time: 150 ns  Iteration: 0  Instance: /my_test_mod
-# Break in Module my_test_mod at block_mem/mem_controller_test.sv line 91
+# Loading work.parser_typedefs_pkg(fast)
+# Loading work.packet_parser_n6_sv_unit(fast)
+# Loading work.PacketParserN6(fast)
+# ** Warning: (vsim-3015) [PCDPC] - Port size (32) does not match connection size (33) for port 'bus'. The port definition is at: packet_parser/packet_parser_n6.sv(6).
+#    Time: 0 ps  Iteration: 0  Instance: /my_test_mod/dut File: my_test.sv Line: 46
+# ** Warning: (vsim-3015) [PCDPC] - Port size (120) does not match connection size (32) for port 'phs_o'. The port definition is at: packet_parser/packet_parser_n6.sv(10).
+#    Time: 0 ps  Iteration: 0  Instance: /my_test_mod/dut File: my_test.sv Line: 46
+# Compiling C:/Users/omer_/AppData/Local/Temp\omer_@DESKTOP-4RR2HNE_dpi_22000\win64_gcc-4.5.0\exportwrapper.c
+# Loading C:/Users/omer_/AppData/Local/Temp\omer_@DESKTOP-4RR2HNE_dpi_22000\win64_gcc-4.5.0\vsim_auto_compile.dll
+# ** Warning: (vsim-3770) Failed to find user specified function 'gcm_crypt' in DPI C/C++ source files.
+#    Time: 0 ps  Iteration: 0  Region: /my_test_sv_unit File: System-Verilog-Packet-Library/hdr_db/../hdr_db/include/gcm-aes/sv-file/gcm_dpi.sv
+# ** Warning: (vsim-3770) Failed to find user specified function 'aes_hkey' in DPI C/C++ source files.
+#    Time: 0 ps  Iteration: 0  Region: /my_test_sv_unit File: System-Verilog-Packet-Library/hdr_db/../hdr_db/include/gcm-aes/sv-file/gcm_dpi.sv
+# do wave.do
+# 20000 : INFO : TEST : Pack pkt 1
+#     cfg_hdr : {eth[0], ipv4[0], udp[0], data[0]} (IEEE802)
+#              toh :                                                   plen : 60 
+#              toh :                                           chop_plen_to : 0 
+#           eth[0] : [   0 :   47] :   0 :                               da : 48'hcb630c415e89 
+#           eth[0] : [  48 :   95] :   6 :                               sa : 48'he4fbfef4a4c2 
+#           eth[0] : [  96 :  111] :  12 :                            etype : 16'h800 (IPV4)
+#          ipv4[0] : [ 112 :  115] :  14 :                          version : 4'h4 
+#          ipv4[0] : [ 116 :  119] :  14 :                              ihl : 4'h5 
+#          ipv4[0] : [ 120 :  127] :  15 :                              tos : 8'h2 
+#          ipv4[0] : [ 128 :  143] :  16 :                     total_length : 16'h2a 
+#          ipv4[0] : [ 144 :  159] :  18 :                               id : 16'h4f27 
+#          ipv4[0] : [ 160 :  160] :  20 :                         reserved : 1'h0 
+#          ipv4[0] : [ 161 :  161] :  20 :                               df : 1'h0 
+#          ipv4[0] : [ 162 :  162] :  20 :                               mf : 1'h1 
+#          ipv4[0] : [ 163 :  175] :  20 :                      frag_offset : 13'h1d17 
+#          ipv4[0] : [ 176 :  183] :  22 :                              ttl : 8'h1d 
+#          ipv4[0] : [ 184 :  191] :  23 :                         protocol : 8'h11 (UDP)
+#          ipv4[0] : [ 192 :  207] :  24 :                         checksum : 16'h877d (GOOD)
+#          ipv4[0] : [ 208 :  239] :  26 :                            ip_sa : 32'hf03717ae 
+#          ipv4[0] : [ 240 :  271] :  30 :                            ip_da : 32'hcf27b2f8 
+#           udp[0] : [ 272 :  287] :  34 :                          src_prt : 16'he89f 
+#           udp[0] : [ 288 :  303] :  36 :                          dst_prt : 16'hc863 (UNKNOWN)
+#           udp[0] : [ 304 :  319] :  38 :                           length : 16'h16 
+#           udp[0] : [ 320 :  335] :  40 :                         checksum : 16'hd447 (GOOD)
+#          data[0] :                                               data_len : 14 (data => 47 69 94 53 ..)
+#              toh :                                                pad_len : 0 
+#              toh : [ 448 :  479] :  56 :                            crc32 : 32'he63eb701 (GOOD)
+# 
+#          pkt_lib :        0   1  2  3  4  5  6  7 |  8  9 10 11 12 13 14 15
+#          pkt_lib :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          pkt_lib :    0 : cb 63 0c 41 5e 89 e4 fb | fe f4 a4 c2 08 00 45 02 
+#          pkt_lib :   16 : 00 2a 4f 27 3d 17 1d 11 | 87 7d f0 37 17 ae cf 27 
+#          pkt_lib :   32 : b2 f8 e8 9f c8 63 00 16 | d4 47 47 69 94 53 6e fb 
+#          pkt_lib :   48 : f7 d7 38 1a 66 7d 0f 49 | e6 3e b7 01 
+#          pkt_lib :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          pkt_lib : (Total Len  = 60)
+# 
+# plen of packet 0 = 60
+# 180000 : INFO : TEST : Pack pkt 16
+#     cfg_hdr : {eth[0], ipv4[0], tcp[0], data[0]} (IEEE802)
+#              toh :                                                   plen : 108 
+#              toh :                                           chop_plen_to : 0 
+#           eth[0] : [   0 :   47] :   0 :                               da : 48'he0c5872abba6 
+#           eth[0] : [  48 :   95] :   6 :                               sa : 48'hdd187ae19f73 
+#           eth[0] : [  96 :  111] :  12 :                            etype : 16'h800 (IPV4)
+#          ipv4[0] : [ 112 :  115] :  14 :                          version : 4'h4 
+#          ipv4[0] : [ 116 :  119] :  14 :                              ihl : 4'ha 
+#          ipv4[0] : [ 120 :  127] :  15 :                              tos : 8'h52 
+#          ipv4[0] : [ 128 :  143] :  16 :                     total_length : 16'h5a 
+#          ipv4[0] : [ 144 :  159] :  18 :                               id : 16'hc951 
+#          ipv4[0] : [ 160 :  160] :  20 :                         reserved : 1'h1 
+#          ipv4[0] : [ 161 :  161] :  20 :                               df : 1'h0 
+#          ipv4[0] : [ 162 :  162] :  20 :                               mf : 1'h0 
+#          ipv4[0] : [ 163 :  175] :  20 :                      frag_offset : 13'h1d6b 
+#          ipv4[0] : [ 176 :  183] :  22 :                              ttl : 8'h5a 
+#          ipv4[0] : [ 184 :  191] :  23 :                         protocol : 8'h6 (TCP)
+#          ipv4[0] : [ 192 :  207] :  24 :                         checksum : 16'hfafc (GOOD)
+#          ipv4[0] : [ 208 :  239] :  26 :                            ip_sa : 32'ha48344bc 
+#          ipv4[0] : [ 240 :  271] :  30 :                            ip_da : 32'h679e6b12 
+#          ipv4[0] :               :  34 :                          options : (Total Len  = 20)
+#          ipv4[0] :        0   1  2  3  4  5  6  7 |  8  9 10 11 12 13 14 15
+#          ipv4[0] :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          ipv4[0] :    0 : ba dc 29 14 8b 3a 2d 31 | 47 4c bb 9e 85 12 c1 54 
+#          ipv4[0] :   16 : 09 54 4e 9f 
+#          ipv4[0] :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#           tcp[0] : [ 432 :  447] :  54 :                          src_prt : 16'h8724 
+#           tcp[0] : [ 448 :  463] :  56 :                          dst_prt : 16'hebb6 (UNKNOWN)
+#           tcp[0] : [ 464 :  495] :  58 :                       seq_number : 32'hb7ddf3b9 
+#           tcp[0] : [ 496 :  527] :  62 :                       ack_number : 32'h50668dda 
+#           tcp[0] : [ 528 :  531] :  66 :                           offset : 4'h8 
+#           tcp[0] : [ 532 :  535] :  66 :                             rsvd : 4'h7 
+#           tcp[0] : [ 536 :  543] :  67 :                            flags : 8'h5c (=> CWR 0 ECE 1 URG 0 ACK 1 PSH 1 RST 1 SYN 0 FIN 0)
+#           tcp[0] : [ 544 :  559] :  68 :                           window : 16'hef41 
+#           tcp[0] : [ 560 :  575] :  70 :                         checksum : 16'hb760 (GOOD)
+#           tcp[0] : [ 576 :  591] :  72 :                       urgent_ptr : 16'hc0cc 
+#           tcp[0] :               :  74 :                          options : (Total Len  = 12)
+#           tcp[0] :        0   1  2  3  4  5  6  7 |  8  9 10 11 12 13 14 15
+#           tcp[0] :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#           tcp[0] :    0 : 71 f7 28 a7 f7 f4 8e b7 | 0f 35 81 74 
+#           tcp[0] :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          data[0] :                                               data_len : 18 (data => a0 1c 22 3d ..)
+#              toh :                                                pad_len : 0 
+#              toh : [ 832 :  863] : 104 :                            crc32 : 32'h906512f8 (GOOD)
+# 
+#          pkt_lib :        0   1  2  3  4  5  6  7 |  8  9 10 11 12 13 14 15
+#          pkt_lib :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          pkt_lib :    0 : e0 c5 87 2a bb a6 dd 18 | 7a e1 9f 73 08 00 4a 52 
+#          pkt_lib :   16 : 00 5a c9 51 9d 6b 5a 06 | fa fc a4 83 44 bc 67 9e 
+#          pkt_lib :   32 : 6b 12 ba dc 29 14 8b 3a | 2d 31 47 4c bb 9e 85 12 
+#          pkt_lib :   48 : c1 54 09 54 4e 9f 87 24 | eb b6 b7 dd f3 b9 50 66 
+#          pkt_lib :   64 : 8d da 87 5c ef 41 b7 60 | c0 cc 71 f7 28 a7 f7 f4 
+#          pkt_lib :   80 : 8e b7 0f 35 81 74 a0 1c | 22 3d b6 2e 90 27 80 fe 
+#          pkt_lib :   96 : c8 ae 01 02 89 0c c9 f6 | 90 65 12 f8 
+#          pkt_lib :        ~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~
+#          pkt_lib : (Total Len  = 108)
+# 
+# data_ctr : 0000004c ipv4_opts_len : a 
+# 
+# ** Note: $stop    : my_test.sv(271)
+#    Time: 470 ns  Iteration: 0  Instance: /my_test_mod
+# Break in Module my_test_mod at my_test.sv line 271
+# End time: 03:08:53 on Mar 22,2024, Elapsed time: 0:02:38
+# Errors: 0, Warnings: 5

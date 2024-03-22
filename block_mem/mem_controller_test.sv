@@ -75,7 +75,7 @@ module my_test_mod (); // {
     r_id_in = 0;
     #20;
     reset = 0;
-    #100;
+    
     data_in = 32'hdeadface;
     wen = 1;
     byte_valid = 4'hf;
