@@ -18,8 +18,10 @@ package parser_typedefs_pkg;
     N3_IPV4_1_OPTS,
     N3_UDP_1,
     N3_TCP_1,
+    N3_TCP_1_OPTS,
     N3_PAYLOAD
   }N3_STATES;
+
   typedef struct packed {
     logic [7 : 0]             msg_type;
     logic [15 : 0]            length;

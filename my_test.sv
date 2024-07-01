@@ -43,23 +43,23 @@ module my_test_mod (); // {
   logic [31:0] phs_tb;
   logic sop;
   logic [31:0] plb;
-  PacketParserN6  dut(
-    .bus(bus),
-    .CLK(CLK_test),
-    .reset(reset),
-    .start_of_packet_i(sop),
-    .phs_o(phs_tb),
-    .pay_last_word(plb)
-  );
-
-  // PacketParserN3  dut(
+  // PacketParserN6  dut(
   //   .bus(bus),
   //   .CLK(CLK_test),
   //   .reset(reset),
   //   .start_of_packet_i(sop),
-  //   // .pay_last_word(plb),
-  //   .phs_o(phs_tb)
+  //   .phs_o(phs_tb),
+  //   .pay_last_word(plb)
   // );
+
+  PacketParserN3  dut(
+    .bus(bus),
+    .CLK(CLK_test),
+    .reset(reset),
+    .start_of_packet_i(sop),
+    // .pay_last_word(plb),
+    .phs_o(phs_tb)
+  );
   real period_ns = 100ns;
    always begin
 
@@ -90,8 +90,8 @@ module my_test_mod (); // {
     reset = 0;
     p = new();
     p1 = new();
-    p.cfg_hdr('{p.eth[0], p.ipv4[0], p.udp[0], p.data[0] });
-    p1.cfg_hdr('{p1.eth[0], p1.ipv4[0], p1.tcp[0], p1.data[0]});
+    p.cfg_hdr('{p.eth[0], p.ipv4[0], p.udp[0], p.gtp[0], p.pdu[0], p.ipv4[1], p.udp[1],  p.data[0] });
+    p1.cfg_hdr('{p1.eth[0], p1.ipv4[0], p1.udp[0], p1.gtp[0], p1.pdu[0], p1.ipv4[1], p1.tcp[0], p1.data[0]});
 
     // p.cfg_hdr('{p.eth[0], p.ipv4[0], p.udp[0], p.gtp[0], p.pdu[0], p.ipv4[1], p.udp[1], p.data[0] });
     // p1.cfg_hdr('{p1.eth[0], p1.ipv4[0], p1.udp[0], p1.gtp[0], p1.pdu[0], p1.ipv4[1], p1.tcp[0], p1.data[0]});
