@@ -131,7 +131,7 @@ module PacketParserN3 (
     end 
   end : pseudoHeader_creation
 
-  always_ff @(currentState, data_ctr, start_of_packet_i, opts_ctr) begin : state_machine
+  always_comb begin : state_machine
   nextState <= currentState;
   case (currentState)
     N3_IDLE : begin
@@ -171,23 +171,32 @@ module PacketParserN3 (
 
     N3_IPV4_OPTS : begin 
 
-      if (opts_ctr < ipv4_opts_len - `IPV4_HDR_MIN_LEN_W - 1) begin 
-        ipv4_opts_buf[31 : 0] <= data_buffer[47 : 16];
-        for (int i = 0; i < (`IPV4_OPTS_MAX_LEN - 1) * 32; i = i + 1) begin
-          ipv4_opts_buf[i + 32] <= ipv4_opts_buf[i];
-        end
-        nextState <= N3_IPV4_OPTS;
-      end else begin 
-        nextState <= N3_UDP;
+      ipv4_opts_buf[(`BUS_WIDTH_B * `BYTE_WIDTH) - 1 : 0] <= data_buffer[47 : 16];
+      for (int i = 0; i < (`IPV4_OPTS_MAX_LEN - 1) * (`BUS_WIDTH_B * `BYTE_WIDTH); i = i + 1) begin
+        ipv4_opts_buf[i + (`BUS_WIDTH_B * `BYTE_WIDTH)] <= ipv4_opts_buf[i];
       end
+      if (opts_ctr < (ipv4_opts_len - `IPV4_HDR_MIN_LEN_W) * 4 - 1) begin 
+        nextState <= N3_IPV4_OPTS;
+      //Determine the next header type from protocol field in IPv4 header
+      end else  begin 
+        if (tpdu_ipv4Header.protocol == `PROTOCOL_UDP)begin 
+          nextState <= N3_UDP;
+        end else begin 
+          nextState <= N3_IDLE;
+        end
+      end 
 
     end
     N3_UDP : begin
       if(data_ctr >= `UDP_HDR_SIZE_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
-        gtp_udpHeader <= data_buffer[ (`UDP_HIGH_INDEX * 8) - 1 : `UDP_LOW_INDEX * 8];
-        pseudoHeader.length <= gtp_udpHeader.length;
+        gtp_udpHeader <= data_buffer[`UDP_LEFT_INDEX -: `UDP_HDR_SIZE_BITS];
         nextState <= N3_GTP;
       end 
+      // if(data_ctr >= `UDP_HDR_SIZE_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
+      //   gtp_udpHeader <= data_buffer[ (`UDP_HIGH_INDEX * 8) - 1 : `UDP_LOW_INDEX * 8];
+      //   // pseudoHeader.length <= gtp_udpHeader.length;
+      //   nextState <= N3_GTP;
+      // end 
     end
 
     N3_GTP : begin 
@@ -240,7 +249,7 @@ module PacketParserN3 (
     N3_UDP_1 : begin 
       if(data_ctr >= `UDP_HDR_SIZE_B + `IPV4_HDR_SIZE_B + `GTP_OVERHEAD_SIZE) begin 
         tpdu_udpHeader <= data_buffer[(`UDP_HDR_SIZE_B + (`UDP_HDR_SIZE_B % 4)) * 8 - 1 : (`UDP_HDR_SIZE_B % 4) * 8];
-        pseudoHeader.length   <=  tpdu_udpHeader.length;
+        // pseudoHeader.length   <=  tpdu_udpHeader.length;
         nextState <= N3_PAYLOAD;
       end 
 

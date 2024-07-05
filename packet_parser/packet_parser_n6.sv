@@ -147,7 +147,7 @@ module PacketParserN6 (
     
   end
 
-  always_ff @(currentState, data_ctr, start_of_packet_i, opts_ctr) begin : state_machine
+  always_comb @(currentState, data_ctr, start_of_packet_i, opts_ctr) begin : state_machine
   nextState <= currentState;
   ethernetHeader          <= ethernetHeader;
   tpdu_ipv4Header         <= tpdu_ipv4Header;

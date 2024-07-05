@@ -39,8 +39,8 @@ module my_test_mod (); // {
   int remainder;
   bit CLK_test = 0;
   logic reset;
-  logic [(`BUS_WIDTH_B * `BYTE_WIDTH):0] bus;
-  logic [31:0] phs_tb;
+  logic [(`BUS_WIDTH_B * `BYTE_WIDTH) - 1 : 0 ] bus;
+  logic [119:0] phs_tb;
   logic sop;
   logic [31:0] plb;
   // PacketParserN6  dut(
