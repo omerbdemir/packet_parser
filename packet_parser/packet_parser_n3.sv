@@ -161,9 +161,12 @@ module PacketParserN3 (
       if(data_ctr >= `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
         underlay_ipv4Header <= data_buffer[(`IPV4_HIGH_INDEX * 8) - 1 : (`IPV4_LOW_INDEX) * 8];
         if (data_buffer[(`IPV4_HIGH_INDEX * 8) - 5 : (`IPV4_HIGH_INDEX * 8) - 8] > 5) begin
-          ipv4_opts_len <= data_buffer[(`IPV4_HIGH_INDEX * 8) - 5 : (`IPV4_HIGH_INDEX * 8) - 8];
+          // ipv4_opts_len <= data_buffer[(`IPV4_HIGH_INDEX * 8) - 5 : (`IPV4_HIGH_INDEX * 8) - 8];
+          ipv4_opts_len <= data_buffer[ `IPV4_LEFT_INDEX - `IPV4_VER_LEN_BITS -: `IPV4_IHL_LEN_BITS];
+          $display("IPV4 left index = : %h IPv4 ver len bits = %h, IPv4 IHL len bits = %h", `IPV4_LEFT_INDEX, `IPV4_VER_LEN_BITS, `IPV4_IHL_LEN_BITS);
           nextState <= N3_IPV4_OPTS;
         end else begin 
+          ipv4_opts_len <= 4'h5; 
           nextState <= N3_UDP;
         end
       end
@@ -200,7 +203,9 @@ module PacketParserN3 (
     end
 
     N3_GTP : begin 
-      if(data_ctr >= `GTP_HDR_SIZE_B + `UDP_HDR_SIZE_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
+      if(data_ctr >= `GTP_HDR_SIZE_B + `UDP_HDR_SIZE_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B + ((ipv4_opts_len - `IPV4_HDR_MIN_LEN_W) * 4)) begin 
+        $display("IPv4 opts len : %h", ipv4_opts_len);
+        $display("Data counter : %h", data_ctr);
         gtpHeader <= data_buffer[(`GTP_HIGH_INDEX * 8) - 1 : `GTP_LOW_INDEX * 8];
         nextState <= N3_PDU;
       end 
@@ -208,7 +213,7 @@ module PacketParserN3 (
 
     N3_PDU : begin 
 
-      if(data_ctr >= `PDU_HDR_SIZE_B + `GTP_HDR_SIZE_B + `UDP_HDR_SIZE_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B) begin 
+      if(data_ctr >= `PDU_HDR_SIZE_B + `GTP_HDR_SIZE_B + `UDP_HDR_SIZE_B + `IPV4_HDR_SIZE_B + `ETH_HDR_SIZE_B + ((ipv4_opts_len - `IPV4_HDR_MIN_LEN_W) * 4)) begin 
         pduHeader <= data_buffer[ (`PDU_HIGH_INDEX * 8) - 1 : `PDU_LOW_INDEX * 8];
         nextState <= N3_IPV4_1;
       end
@@ -217,7 +222,7 @@ module PacketParserN3 (
 
     N3_IPV4_1 : begin 
 
-      if(data_ctr >= `IPV4_HDR_SIZE_B + `GTP_OVERHEAD_SIZE) begin 
+      if(data_ctr >= `IPV4_HDR_SIZE_B + `GTP_OVERHEAD_SIZE + ((ipv4_opts_len - `IPV4_HDR_MIN_LEN_W) * 4)) begin 
         tpdu_ipv4Header <= data_buffer[(`IPV4_HDR_SIZE_B + (`IPV4_HDR_SIZE_B % 4)) * 8 - 1 : (`IPV4_HDR_SIZE_B % 4) * 8];
         $display("Value of searched index  = %h", data_buffer[(`IPV4_HDR_SIZE_B * 8) - 5 -: 4 ]);
         if (data_buffer[(`IPV4_HDR_SIZE_B * 8) - 5 -: 4] > 5) begin
@@ -256,7 +261,7 @@ module PacketParserN3 (
     end 
 
     N3_TCP_1 : begin 
-      if(data_ctr >= `TCP_HDR_SIZE_MIN_B + `IPV4_HDR_SIZE_B + `GTP_OVERHEAD_SIZE) begin 
+      if(data_ctr >= `TCP_HDR_SIZE_MIN_B + `IPV4_HDR_SIZE_B + `GTP_OVERHEAD_SIZE + ((ipv4_opts_len - `IPV4_HDR_MIN_LEN_W) * 4)) begin 
         tpdu_tcpHeader <= data_buffer[(`TCP_HDR_SIZE_MIN_B + (`TCP_HDR_SIZE_MIN_B % 4)) * 8 - 1 : (`TCP_HDR_SIZE_MIN_B % 4) * 8];
         nextState <= N3_PAYLOAD;
       end 

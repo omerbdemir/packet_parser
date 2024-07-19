@@ -1,41 +1,133 @@
-module HeaderCreatorN3ToN6(
-  input logic             CLK,
-  input logic             reset,
-  input logic   [31 : 0]  packet_i,
-  input logic             packet_valid_i,
-  input ADS_N3            ADS_INPUT,
 
-  output logic  [15 : 0]  packet_id_o,
-  output logic            packet_read_req_o,
+`include "header_creator_includes.svh"
+import header_creator_pkg::*;
+
+module HeaderCreatorN3ToN6(
+  input logic                               CLK,
+  input logic                               reset,
+  input logic   [`BUS_WIDTH_BITS - 1 : 0]   packet_bus_i,
+  input logic                               start_of_packet_i,
+  input header_creator_pkg::ADS_N3          ads_input_i,
+
+  output logic  [15 : 0]                    packet_id_o,
+  output logic                              packet_read_req_o
 );
 
-HC_N3_STATES currentState, nextState;
 
-always @(currentState) begin : state_machine
-  nextState <= currentState;
+HC_N3_STATES                                currentState, nextState;
+header_creator_pkg::ADS_N3                  ads_input_reg;
+logic                                       packet_read_req_d;
+logic   [(`BUS_WIDTH_BITS * 16) - 1 : 0]    packet_buffer;
+logic   [15 : 0]                            packet_id_d, packet_id_q;
+logic   [15 : 0]                            old_checksum_i;
+logic   [5  : 0]                            old_dscp_i;
+logic                                       checksum_req_i;
+logic   [7  : 0]                            pkt_ctr;
+logic                                       gnt_o;
+logic   [15 : 0]                            new_checksum_o;
+checksum_gen checksum_gen_i(
+  .clk          (CLK),
+  .reset        (reset),
+  .old_checksum (old_checksum_i),
+  .removed_val  (old_dscp_i),
+  .new_val      (ads_input_i.DSCP),
+  .req          (checksum_req_i),
+  .gnt          (gnt_o),
+  .new_checksum (new_checksum_o)
+);
+always_ff @( posedge(CLK) ) begin : packet_buffering
+  if(reset) begin 
+    packet_buffer   <= 0;
+    pkt_ctr         <= 0;
+  end else begin 
+    if(start_of_packet_i == 1) begin 
+      pkt_ctr       <=  0;
+      packet_buffer <=  0;
+    end else begin 
+      pkt_ctr       <= pkt_ctr + 1;
+      packet_buffer[`BUS_WIDTH_BITS - 1 : 0] <= packet_bus_i;
+      for (int i = 0 ; i < (`BUS_WIDTH_BITS * 16); i += 1) begin
+        packet_buffer[i + `BUS_WIDTH_BITS] <= packet_buffer[i];
+      end
+    end   
+  end
+end
+
+// assign old_checksum_i =   packet_buffer[pkt_ctr * `BUS_WIDTH_BITS - 81 -: 16];
+// assign old_dscp_i     =   packet_buffer[pkt_ctr * `BUS_WIDTH_BITS - 9  -: 6];
+
+always_comb begin : old_vals
+  old_dscp_i          <=  old_dscp_i;
+  old_checksum_i      <=  old_checksum_i;
+  checksum_req_i      <=  0;
+  if(currentState == N3_IDLE)begin 
+    old_checksum_i    <=  0;
+    old_dscp_i        <=  0;
+    checksum_req_i    <=  0;
+  end   
+  if(currentState == N3_PKT_RCV) begin 
+    if(pkt_ctr * `BUS_WIDTH_BITS >= 96) begin 
+      old_checksum_i  <=  packet_buffer[pkt_ctr * `BUS_WIDTH_BITS - 81 -: 16];
+      old_dscp_i      <=  packet_buffer[pkt_ctr * `BUS_WIDTH_BITS - 9  -: 6];
+      checksum_req_i  <=  1;
+    end 
+  end
+end
+
+always_comb begin : signal_assignment
+  packet_read_req_d <= 0;
+  packet_id_d       <= 0;
   case (currentState)
-    IDLE: begin
-      
+    N3_IDLE:  begin 
+      packet_read_req_d <= 1;
     end
-    PKT_RCV: begin 
-
-    end
-    PKT_MODIFY: begin 
+    N3_PKT_RCV: begin 
 
     end 
-    PKT_FWD: begin 
 
+    N3_PKT_MODIFY: begin 
+
+    end 
+
+    N3_PKT_FWD: begin 
+
+    end 
+  endcase
+  
+end
+
+always_comb begin : state_machine
+  nextState         = currentState;
+  case (currentState)
+    N3_IDLE: begin 
+      if(start_of_packet_i == 1'h1) begin 
+        nextState = N3_PKT_RCV;
+      end 
     end
-    default: 
+    N3_PKT_RCV: begin 
+      if(pkt_ctr * `BUS_WIDTH_BITS >= 96) begin 
+        nextState = N3_PKT_MODIFY;
+      end
+    end
+    N3_PKT_MODIFY: begin   
+      nextState = N3_PKT_FWD;
+    end
+    N3_PKT_FWD: begin 
+      nextState = N3_IDLE;
+    end
   endcase
 end 
 
 always @(posedge CLK) begin : state_transition
   if (reset) begin 
-    currentState <= IDLE;
+    currentState        <= N3_IDLE;
+    ads_input_reg       <= 0;
   end else begin 
-    currentState <= nextState;
+    ads_input_reg       <= ads_input_i;
+    currentState        <= nextState;
   end 
 end
 
+assign packet_read_req_o  = packet_read_req_d;
+assign packet_id_o        = packet_id_d;
 endmodule

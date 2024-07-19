@@ -23,6 +23,7 @@ package parser_typedefs_pkg;
   }N3_STATES;
 
   typedef struct packed {
+    logic [7 : 0]             flags;
     logic [7 : 0]             msg_type;
     logic [15 : 0]            length;
     logic [31 : 0]            teid;
@@ -66,8 +67,8 @@ package parser_typedefs_pkg;
     logic [7:0]               typeOfService;
     logic [15:0]              totalLength;
     logic [15:0]              identification;
+    logic [2:0]               flags; 
     logic [12:0]              fragmentOffset;
-    logic [2:0]               flags;
     logic [7:0]               timeToLive;
     logic [7:0]               protocol;
     logic [15:0]              headerChecksum;

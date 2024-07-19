@@ -43,6 +43,8 @@ module my_test_mod (); // {
   logic [119:0] phs_tb;
   logic sop;
   logic [31:0] plb;
+  logic [31 : 0] my_var, temp_var, temp_sum;
+  logic [15 : 0] my_checksum, manual_checksum;
   // PacketParserN6  dut(
   //   .bus(bus),
   //   .CLK(CLK_test),
@@ -62,42 +64,20 @@ module my_test_mod (); // {
   );
   real period_ns = 100ns;
    always begin
-
-    #5;
-    // if(reset) begin
-    //   CLK_test = 0;
-    // end else begin
-      CLK_test = ~CLK_test;
-    
-    // end
+    CLK_test = 0;
+    forever #5  CLK_test = ~CLK_test;
    end
-  // always_ff @( posedge CLK_test or negedge reset) begin : blockName
-  //   if(~reset) begin
-  //     bus <= 32'h12345678;
-  //   end else begin
-  //     bus <= {bus[23:0], bus[31:24]};
-  //   end
-  // end
 
   initial
-  begin // {
-    // CLK_test = 0;
-    // bus = 0;
+  begin
+    my_var = 0;
     remainder = 0;
     reset = 1;
     sop = 0;  
     #20;
     reset = 0;
     p = new();
-    p1 = new();
     p.cfg_hdr('{p.eth[0], p.ipv4[0], p.udp[0], p.gtp[0], p.pdu[0], p.ipv4[1], p.udp[1],  p.data[0] });
-    p1.cfg_hdr('{p1.eth[0], p1.ipv4[0], p1.udp[0], p1.gtp[0], p1.pdu[0], p1.ipv4[1], p1.tcp[0], p1.data[0]});
-
-    // p.cfg_hdr('{p.eth[0], p.ipv4[0], p.udp[0], p.gtp[0], p.pdu[0], p.ipv4[1], p.udp[1], p.data[0] });
-    // p1.cfg_hdr('{p1.eth[0], p1.ipv4[0], p1.udp[0], p1.gtp[0], p1.pdu[0], p1.ipv4[1], p1.tcp[0], p1.data[0]});
-
-    p1.toh.max_plen = 500;
-    p1.toh.min_plen = 20;
 
     p.toh.max_plen = 600;
     p.toh.min_plen = 4;
@@ -110,32 +90,16 @@ module my_test_mod (); // {
       // tcp[0].offset > 6;
     };
 
-    p1.randomize with
-    {
-      data[0].data_len > 10;
-      data[0].data_len < 20;
-      ipv4[0].ihl > 6;
-      tcp[0].offset > 6;
-    };
     p.pack_hdr(p_pkt);
     $display("%0t : INFO : TEST : Pack pkt %0d", $time, i + 1);
-
+  
     p.display_hdr_pkt(p_pkt);
     $display("plen of packet 0 = %0d", p.toh.plen);
-    // $display("mokoko");
-    // $display("%0d", p_pkt[0]);
-    // p1 = new();
-    // p.unpack_hdr(p_pkt, SMART_UNPACK,, FC);
-    // $display("%0t : INFO    : TEST    : Unpack Pkt %0d", $time, i + 1);
-    // p.display_hdr_pkt(p_pkt); 
     for(i = 0; i < p.toh.plen / `BUS_WIDTH_B; i++)
     begin
       for (int j = 0; j < `BUS_WIDTH_B; j++) begin
         bus = {bus, p_pkt[i * `BUS_WIDTH_B + j]};
       end
-
-      // bus = {p_pkt[i * 4], p_pkt[i * 4 + 1], p_pkt[i * 4 + 2], p_pkt[i * 4 + 3]};
-      // bus = {p_pkt[i * 4 + 3], p_pkt[i * 4 + 2], p_pkt[i * 4 + 1], p_pkt[i * 4]};
       if(i == 0) begin
         sop = 1;
       end else begin
@@ -144,19 +108,26 @@ module my_test_mod (); // {
       #10;
     end
     remainder = p.toh.plen % `BUS_WIDTH_B;
-    case (remainder)
-    0: begin
-           // Handle case where remainder is 0
-       end
-    default: begin
-                 bus = '0; // Initialize bus with all zeroes
-                 for (int j = 0; j < remainder; j++) begin
-                     bus = {p_pkt[p.toh.plen - (j+1)], bus};
-                 end
-             end
-    endcase
+    bus = '0; // Initialize bus with all zeroes
+    for (int j = 0; j < remainder; j++) begin
+        bus = {p_pkt[p.toh.plen - (j+1)], bus};
+    end
 
     #10;
+
+    p1 = new();
+    p1.cfg_hdr('{p1.eth[0], p1.ipv4[0], p1.udp[0], p1.gtp[0], p1.pdu[0], p1.ipv4[1], p1.tcp[0], p1.data[0]});
+
+    p1.toh.max_plen = 500;
+    p1.toh.min_plen = 20;
+    p1.randomize with
+    {
+      data[0].data_len > 10;
+      data[0].data_len < 20;
+      ipv4[0].ihl < 6;
+      ipv4[1].ihl > 6;
+      tcp[0].offset > 6;
+    };
 
     p1.pack_hdr(p1_pkt);
     $display("%0t : INFO : TEST : Pack pkt %0d", $time, i + 1);
@@ -269,6 +240,56 @@ module my_test_mod (); // {
     // end simulation
     // #1000ns
     $stop();
+
+        for(int j = 0; j < 1000; j += 1) begin 
+      p = new();
+      p1 = new();
+      p.cfg_hdr('{p.eth[0], p.ipv4[0], p.udp[0], p.gtp[0], p.pdu[0], p.ipv4[1], p.udp[1],  p.data[0] });
+      p1.cfg_hdr('{p1.eth[0], p1.ipv4[0], p1.udp[0], p1.gtp[0], p1.pdu[0], p1.ipv4[1], p1.tcp[0], p1.data[0]});
+      p1.toh.max_plen = 500;
+      p1.toh.min_plen = 20;
+
+      p.toh.max_plen = 600;
+      p.toh.min_plen = 4;
+      p.randomize with
+      {
+        data[0].data_len > 10;
+        data[0].data_len < 20;
+        ipv4[0].ihl < 6;
+        // tcp[0].offset > 6;
+      };
+      my_var = 0;
+      p.pack_hdr(p_pkt);  
+      p_pkt[30] = 8'h13;
+      p_pkt[31] = 8'h61;
+      for (int i = 0 ; i < 10 ; i += 1) begin
+        if(i == 5) begin 
+          continue;
+        end
+        temp_var = {p_pkt[i * 2 + 14], p_pkt[i * 2 + 15]};
+        my_var += temp_var;
+      end
+      my_var = my_var[31 : 16] + my_var[15 : 0];
+      my_var = ~my_var;
+      my_checksum = my_var[15 : 0];
+
+      temp_sum = p.ipv4[0].checksum;
+      temp_sum = ~(temp_sum) + ~p.ipv4[0].ip_da[31 : 16];
+      temp_sum = temp_sum + 16'h1361;
+      temp_sum = temp_sum[31 : 16] + temp_sum[15 : 0];
+      manual_checksum = ~temp_sum[15  : 0];
+
+
+
+
+
+      if(manual_checksum == my_checksum + 2) begin 
+        $display("PASSED ");
+      end else begin 
+        $display("FAILED my_checksum %h    packet checksum %h manual checksum %h ",my_checksum, p.ipv4[0].checksum, manual_checksum);
+      end
+      // p.display_hdr_pkt(p_pkt);
+    end
   end // }
 
 endmodule : my_test_mod // }

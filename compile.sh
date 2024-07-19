@@ -1,5 +1,6 @@
 #!/bin/bash 
 rm -r new_lib
+rm -r work
 OPTIONS="+acc -permissive -timescale "1ns/1ps" +define+NO_PROCESS_AE"
 trl=$*;
 vlib work
@@ -11,13 +12,26 @@ vlib work
 # vsim -gui -sv_seed 1223 my_test_mod &
 
 vlog -work work -sv $OPTIONS  packet_parser/parser_typedefs_pkg.sv
-vlog -work work -sv $OPTIONS packet_parser/packet_parser_n3.sv
+vlog -work work -sv $OPTIONS  packet_parser/packet_parser_n3.sv
 vlog -work work -sv $OPTIONS -f pktlib.vf my_test.sv
 
+vlog -work work -sv $OPTIONS  header_creator/header_creator_typedefs_pkg.sv
+vlog -work work -sv $OPTIONS  header_creator/header_creator_n3_to_n6.sv
+vlog -work work -sv $OPTIONS  header_creator/checksum_gen.sv
+vlog -work work -sv $OPTIONS -f pktlib.vf header_creator_test.sv
+vlog -work work -sv $OPTIONS -f pktlib.vf header_creator/checksum_test.sv
 
-
-vsim -gui -sv_seed 1223 -do "wave.do" my_test_mod &
-
+if [ "$1" == "sim" ]; then 
+  if [ "$2" == "1" ]; then 
+    vsim -gui -sv_seed 1223 -do "hc_wave.do" headerCreatorTest &
+  fi
+  if [ "$2" == "2" ]; then 
+    vsim -gui -sv_seed 1223 -do "header_creator/cs_wave.do" checksum_test &
+  fi
+  if [ "$2" == "3" ]; then 
+    vsim -gui -sv_seed 1223 -do "wave.do" my_test_mod &
+  fi
+fi
 
 
 
