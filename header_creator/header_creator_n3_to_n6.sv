@@ -23,8 +23,12 @@ logic   [15 : 0]                            old_checksum_i;
 logic   [5  : 0]                            old_dscp_i;
 logic                                       checksum_req_i;
 logic   [7  : 0]                            pkt_ctr;
-logic                                       gnt_o;
-logic   [15 : 0]                            new_checksum_o;
+logic                                       gnt_i;
+logic   [15 : 0]                            new_checksum_i;
+logic                                       is_ttl;
+
+assign is_ttl = (packet_buffer[pkt_ctr * `BUS_WIDTH_BITS - 65 -: 8] > 0) ? 1 : 0;
+
 checksum_gen checksum_gen_i(
   .clk          (CLK),
   .reset        (reset),
@@ -32,30 +36,33 @@ checksum_gen checksum_gen_i(
   .removed_val  (old_dscp_i),
   .new_val      (ads_input_i.DSCP),
   .req          (checksum_req_i),
-  .gnt          (gnt_o),
-  .new_checksum (new_checksum_o)
+  .gnt          (gnt_i),
+  .new_checksum (new_checksum_i)
 );
 always_ff @( posedge(CLK) ) begin : packet_buffering
   if(reset) begin 
     packet_buffer   <= 0;
     pkt_ctr         <= 0;
   end else begin 
-    if(start_of_packet_i == 1) begin 
-      pkt_ctr       <=  0;
-      packet_buffer <=  0;
-    end else begin 
-      pkt_ctr       <= pkt_ctr + 1;
-      packet_buffer[`BUS_WIDTH_BITS - 1 : 0] <= packet_bus_i;
-      for (int i = 0 ; i < (`BUS_WIDTH_BITS * 16); i += 1) begin
-        packet_buffer[i + `BUS_WIDTH_BITS] <= packet_buffer[i];
-      end
-    end   
+    pkt_ctr       <= pkt_ctr + 1;
+    packet_buffer[`BUS_WIDTH_BITS - 1 : 0] <= packet_bus_i;
+    for (int i = 0 ; i < (`BUS_WIDTH_BITS * 16); i += 1) begin
+      packet_buffer[i + `BUS_WIDTH_BITS] <= packet_buffer[i];
+    end
+    if(gnt_i) begin
+        if(is_ttl) begin 
+          
+          packet_buffer[pkt_ctr * `BUS_WIDTH_BITS -48 -1 -: 16] <= new_checksum_i + (9'b100000000);
+
+        end 
+    end
   end
 end
 
 // assign old_checksum_i =   packet_buffer[pkt_ctr * `BUS_WIDTH_BITS - 81 -: 16];
 // assign old_dscp_i     =   packet_buffer[pkt_ctr * `BUS_WIDTH_BITS - 9  -: 6];
-
+// 512'h000000000000000000000000000000000000000000000000 45110027 6daf099e 3d110674 489605bc a647a346 94564a73
+// 512'h000000000000000000000000000000000000000000000000 45110027 6daf099e 3d110674 489605bc a647a346 94564a73
 always_comb begin : old_vals
   old_dscp_i          <=  old_dscp_i;
   old_checksum_i      <=  old_checksum_i;
@@ -82,7 +89,7 @@ always_comb begin : signal_assignment
       packet_read_req_d <= 1;
     end
     N3_PKT_RCV: begin 
-
+         
     end 
 
     N3_PKT_MODIFY: begin 
@@ -109,8 +116,10 @@ always_comb begin : state_machine
         nextState = N3_PKT_MODIFY;
       end
     end
-    N3_PKT_MODIFY: begin   
-      nextState = N3_PKT_FWD;
+    N3_PKT_MODIFY: begin  
+      if(gnt_i) begin 
+        nextState = N3_PKT_FWD;
+      end
     end
     N3_PKT_FWD: begin 
       nextState = N3_IDLE;

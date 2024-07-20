@@ -59,7 +59,7 @@ module headerCreatorTest (); // {
       my_mbx.put(1);
     endtask
 
-    task read_packet();
+    task read_packet(mailbox my_mbx);
       pktlib_class p, p1;
       bit [7:0]    p_pkt [], u_pkt [], p1_pkt[]; 
 
@@ -75,19 +75,28 @@ module headerCreatorTest (); // {
         data[0].data_len  < 20;
         ipv4[0].ihl       < 6;
       };
-
+      test_var = p.ipv4[0].tos;
+      p.ipv4[0].tos[7 -: 6] = 6'h32;
       p.pack_hdr(p_pkt);
+      test_var1 = p.ipv4[0].checksum;
+      p.display_hdr_pkt(p_pkt);
+
+      p.ipv4[0].tos = test_var;
+      p.pack_hdr(p_pkt);
+
+      $display("Modified checksum val %h", test_var1);
       $display("%0t : INFO : TEST : Pack pkt", $time);
       p.display_hdr_pkt(p_pkt);
       for(int i = 0; i < p.toh.plen / `BUS_WIDTH_B; i++) 
       begin 
         for (int j = 0; j < `BUS_WIDTH_B; j++) 
         begin 
-          bus_tmp = {bus_tmp, p_pkt[j]};
+          bus_tmp = {bus_tmp, p_pkt[i * `BUS_WIDTH_B + j]};
         end 
         cb_hc.bus <= bus_tmp;
         if(i == 0) begin 
           cb_hc.sop <= 1;
+          my_mbx.put(1);
         end else begin 
           cb_hc.sop <= 0;
         end 
@@ -113,10 +122,12 @@ module headerCreatorTest (); // {
     $display("Wait sop completion time %0t", $time);
     endtask
 
-    task set_ads();
-      cb_hc.ads.DSCP      <=  8'h12;
-      cb_hc.ads.int_gate  <=  8'h45;
-      cb_hc.ads.Q_ID      <=  16'h8b5a;
+    task set_ads(mailbox my_mbx);
+    int i;
+      my_mbx.get(i);
+      cb_hc.ads.DSCP      <=  8'h32;
+      cb_hc.ads.Q_ID      <=  16'h1324;
+      cb_hc.ads.int_gate  <=  8'hab;
     endtask
 
     task reset_all();
@@ -155,12 +166,13 @@ module headerCreatorTest (); // {
     my_mbx = new();
     fork 
       begin 
-        my_intface.read_packet();
+        my_intface.read_packet(my_mbx);
       end
       begin
-        my_intface.set_ads();
+        my_intface.set_ads(my_mbx);
+        @(my_intface.cb_hc);
       end 
-    join
+    join_any
     #100;
     $stop();
   end 
