@@ -18,17 +18,18 @@ def my_checksum_calc(old_dscp, old_checksum, new_dscp):
     """
     checksum = (~old_checksum) & 0xFFFF
 
-    part2    = (~(old_dscp & 0xFC)) & 0xFFFF
+    old_dscp2 = old_dscp + 0x100
+    part2    = (~(old_dscp2 & 0xFFFC)) & 0xFFFF
     checksum = checksum + part2 
 
     checksum = (checksum >> 16) + (checksum & 0xFFFF)
     checksum += ((checksum >> 16) & 0xFFFF)
 
-    part2    = (~(1 << 8)) & 0xFFFF
-    checksum = checksum + part2 
+    # part2    = (~(1 << 8)) & 0xFFFF
+    # checksum = checksum + part2 
 
-    checksum = (checksum >> 16) + (checksum & 0xFFFF)
-    checksum += ((checksum >> 16) & 0xFFFF)
+    # checksum = (checksum >> 16) + (checksum & 0xFFFF)
+    # checksum += ((checksum >> 16) & 0xFFFF)
 
     # print(f"checksum 2 {checksum:05X}")
     checksum = checksum + (new_dscp & 0xFC)
@@ -189,7 +190,7 @@ for i in range(0, 400000):
     new_checksum = ((randomized[11] & 0xFF))
     new_checksum = new_checksum + ((randomized[10] & 0xFF) << 8)
     my_checksum = my_checksum_calc(old_dscp=old_dscp, old_checksum=old_checksum, new_dscp=new_dscp)
-    if i % 100:
+    if (i % 1000) == 0:
         print(f"Old TTL:0x{old_ttl:04X}, New TTL:0x{new_ttl:04X}, Old DSCP: 0x{old_dscp:04X}, Old Checksum: 0x{old_checksum:04X}, New DSCP: 0x{new_dscp:04X}, New Checksum: 0x{new_checksum:04X}, My Checksum: 0x{my_checksum:04X}")
     if(my_checksum != new_checksum):
         print(f"Old TTL:0x{old_ttl:04X}, Old DSCP: 0x{old_dscp:04X}, Old Checksum: 0x{old_checksum:04X}, New DSCP: 0x{new_dscp:04X}, New Checksum: 0x{new_checksum:04X}, My Checksum: 0x{my_checksum:04X}")

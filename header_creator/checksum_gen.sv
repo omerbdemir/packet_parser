@@ -1,29 +1,34 @@
 module checksum_gen(
-  input wire           clk,
-  input wire           reset,
-
-
-  input wire [15 : 0]  old_checksum,
-  input wire [5 : 0]  removed_val,
-  input wire [5 : 0]  new_val,
-  input wire           req,
-
-  output wire          gnt,
-  output wire [15 : 0] new_checksum
-);
-
+  input wire            clk,
+  input wire            reset,
+  
+  
+  input wire [15 : 0]   old_checksum,
+  input wire [5 : 0]    removed_val,
+  input wire [5 : 0]    new_val,
+  input wire            req,
+  input wire            dec_ttl,
+  
+  output wire           gnt,
+  output wire [15 : 0]  new_checksum
+  );
+  
   typedef enum logic [1:0] {
-        IDLE  = 2'b00,
-        RM = 2'b01,
-        UPDT = 2'b10
-    } state_t;
+    IDLE  = 2'b00,
+    RM = 2'b01,
+    UPDT = 2'b10
+  } state_t;
   logic [15 : 0]  old_checksum_i;
-  logic [5 : 0]  removed_val_i;
-  logic [5 : 0]  new_val_i;
+  logic [12 : 0]   removed_val_i;
+  logic [5 : 0]   new_val_i;
   logic           gnt_o;
   logic [15 : 0]  new_checksum_o;
   logic [15 : 0]  temp_checksum;
   logic           carry;
+  logic [12 : 0]  ttl_val;
+
+
+  assign ttl_val = (dec_ttl) ? 12'h40 : 0;
   state_t   currentState, nextState;
   always_ff @( posedge clk ) begin : calc_checksum;
     if(reset) begin 
@@ -38,10 +43,10 @@ module checksum_gen(
       gnt_o           <=  gnt_o;
       case (currentState)
         IDLE : begin 
-          gnt_o           <= 0;
-          new_checksum_o  <= new_checksum_o;
+          gnt_o           <=  0;
+          new_checksum_o  <=  new_checksum_o;
           old_checksum_i  <=  old_checksum;
-          removed_val_i   <=  removed_val;
+          removed_val_i   <=  removed_val + ttl_val;
           new_val_i       <=  new_val;  
           carry           <=  0;
         end 
@@ -55,12 +60,12 @@ module checksum_gen(
         end   
       endcase
     end
-
+    
   end
   //FFEF + F98B
   //f97A
   //05BC
-
+  
   always_comb begin : StateTransition
     case (currentState)
       IDLE : begin 
@@ -73,7 +78,7 @@ module checksum_gen(
       default: nextState <= IDLE;
     endcase
   end
-
+  
   always_ff @( posedge clk ) begin : blockName
     if(reset) begin 
       currentState <= IDLE;
@@ -81,8 +86,8 @@ module checksum_gen(
       currentState <= nextState;
     end 
   end
-
+  
   assign new_checksum = new_checksum_o;
   assign gnt          = gnt_o;
-
+  
 endmodule
